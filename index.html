@@ -11,29 +11,58 @@
       --bg:#0f172a; --panel:#0b1222ee; --muted:#94a3b8; --primary:#22d3ee; --accent:#a78bfa;
       --border:#1f2937; --card:#111827f2; --ring:0 0 0 3px rgba(34,211,238,.35);
     }
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#e5e7eb;background:
-      radial-gradient(1200px 600px at 10% -10%,rgba(167,139,250,.15),transparent),
-      radial-gradient(900px 600px at 110% 10%,rgba(34,211,238,.12),transparent),
-      var(--bg);}
-    a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#e5e7eb;
+      background:
+        radial-gradient(1200px 600px at 10% -10%,rgba(167,139,250,.15),transparent),
+        radial-gradient(900px 600px at 110% 10%,rgba(34,211,238,.12),transparent),
+        var(--bg);
+    }
+    a{color:var(--primary);text-decoration:none}
+    a:hover{text-decoration:underline}
     .wrap{max-width:1060px;margin:0 auto;padding:24px}
     header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
     .brand{display:flex;align-items:center;gap:14px}
     .logo{width:46px;height:46px;border-radius:12px;background:#000;display:grid;place-items:center;color:#fff;font-weight:800}
     .title h1{margin:0;font-size:30px}
     .title .sub{color:var(--muted)}
-    .layout{display:grid;grid-template-columns:320px 1fr;gap:22px}
+
+    /* === 等高双栏（改为 flex 布局） === */
+    .layout{
+      display:flex;
+      align-items:stretch;     /* 两列等高 */
+      gap:22px;
+    }
+    .side{
+      flex:0 0 320px;          /* 左栏固定宽度 */
+      display:flex;
+      flex-direction:column;
+    }
+    .main{
+      flex:1;                  /* 右栏自适应 */
+      display:flex;
+      flex-direction:column;
+      gap:18px;                /* 右栏各 panel 之间的间距 */
+    }
+
     .panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px}
     .photo{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:16px;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,.25)}
     .block{margin-bottom:18px}
-    h2{font-size:18px;margin:0 0 10px} h3{font-size:16px;margin:0 0 4px}
+    h2{font-size:18px;margin:0 0 10px}
+    h3{font-size:16px;margin:0 0 4px}
     .muted{color:var(--muted)}
     .links-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .links-inline .sep{opacity:.6}
     .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #334155;border-radius:999px;color:#cbd5e1;background:#0b1222aa}
     footer{margin-top:24px;color:#94a3b8;text-align:center}
-    @media (max-width:960px){.layout{grid-template-columns:1fr}.side{order:2}.main{order:1}}
+
+    /* 移动端堆叠 */
+    @media (max-width:960px){
+      .layout{flex-direction:column}
+      .side{flex:unset} /* 取消固定宽度 */
+    }
   </style>
   <script type="application/ld+json">
   {
@@ -67,56 +96,56 @@
     </header>
 
     <div class="layout">
-    <!-- Sidebar -->
-<aside class="panel side">
-  <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
+      <!-- Sidebar -->
+      <aside class="panel side">
+        <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
 
-  <!-- Education -->
-  <div class="block">
-    <h2>Education</h2>
-    <div>
-      <h3>Master of Science<br>The University of Hong Kong<br>Business Analytics</h3>
-      <div class="muted">Aug 2022 – Dec 2023<br>FinTech Club President</div>
-      <h3>Bachelor of Management<br>Huazhong University of Science and Technology<br>Public Administration</h3>
-      <div class="muted">Sep 2013 – Jul 2017<br>Academic Excellence Award<br>GPA 3.65/4.0 (Top 20%)</div>
-    </div> 
-  </div>
+        <!-- Education -->
+        <div class="block">
+          <h2>Education</h2>
+          <div>
+            <h3>Master of Science<br>The University of Hong Kong<br>Business Analytics</h3>
+            <div class="muted">Aug 2022 – Dec 2023<br>FinTech Club President</div>
 
-  <!-- Publications & Certifications moved here -->
-  <div class="block">
-    <h2>Publications & Certifications</h2>
-    <ul style="margin:0;padding-left:18px;line-height:1.6;">
-      <li>
-        DHgate.com’ Project:
-        <a href="https://github.com/JaggerNi/docs/blob/main/TikTok_SOP.pdf" target="_blank" rel="noopener">
-          Standard Operating Procedure for TikTok Live-Streaming E-commerce in the U.S. Region
-        </a>
-      </li>
-      <li>National Computer Rank Certifications (VB Programming, Network Tech — Level II/III)</li>
-      <li>Introduction to Data Analysis with Python & R (CluBear) — Certificate</li>
-      <li>GBA FinTech Talent initiative (Bloomberg) — Participant</li>
-    </ul>
-  </div>
+            <h3>Bachelor of Management<br>Huazhong University of Science and Technology<br>Public Administration</h3>
+            <div class="muted">Sep 2013 – Jul 2017<br>Academic Excellence Award<br>GPA 3.65/4.0 (Top 20%)</div>
+          </div>
+        </div>
 
-  <!-- Links -->
-  <div class="block">
-    <h2>Links</h2>
-    <div class="links-inline">
-      <a href="https://github.com/JaggerNi" target="_blank" rel="noopener">GitHub</a>
-      <span class="sep">|</span>
-      <a href="https://www.linkedin.com/in/jaggerxli/" target="_blank" rel="noopener">LinkedIn</a>
-    </div>
-  </div>
-</aside>
+        <!-- Publications & Certifications -->
+        <div class="block">
+          <h2>Publications & Certifications</h2>
+          <ul style="margin:0;padding-left:18px;line-height:1.6;">
+            <li>
+              DHgate.com’ Project:
+              <a href="https://github.com/JaggerNi/docs/blob/main/TikTok_SOP.pdf" target="_blank" rel="noopener">
+                Standard Operating Procedure for TikTok Live-Streaming E-commerce in the U.S. Region
+              </a>
+            </li>
+            <li>National Computer Rank Certifications (VB Programming, Network Tech — Level II/III)</li>
+            <li>Introduction to Data Analysis with Python & R (CluBear) — Certificate</li>
+            <li>GBA FinTech Talent initiative (Bloomberg) — Participant</li>
+          </ul>
+        </div>
+
+        <!-- Links -->
+        <div class="block" style="margin-top:auto;">
+          <h2>Links</h2>
+          <div class="links-inline">
+            <a href="https://github.com/JaggerNi" target="_blank" rel="noopener">GitHub</a>
+            <span class="sep">|</span>
+            <a href="https://www.linkedin.com/in/jaggerxli/" target="_blank" rel="noopener">LinkedIn</a>
+          </div>
+        </div>
+      </aside>
 
       <!-- Main -->
-      <main class="main" style="display:grid;gap:18px">
+      <main class="main">
         <section class="panel">
           <h2>Profile</h2>
           <p>Data Scientist with strong Python & SQL foundation; experienced in designing ETL pipelines, building predictive models, and turning complex data into actionable insights. Comfortable bridging business and technical stakeholders. Hands-on with Databricks, Azure, Tableau, and Oracle Cloud across finance, investment research, and enterprise analytics scenarios.</p>
         </section>
 
-        <!-- INTERESTS & SKILLS -->
         <section class="panel">
           <h2>INTERESTS &amp; SKILLS</h2>
           <ul style="margin:0;padding-left:18px;line-height:1.8;">
@@ -130,22 +159,22 @@
 
         <section class="panel">
           <h2>Experience</h2>
-          <div class="list">
+          <div>
             <div>
               <h3>Freelancer — Data Scientist / Senior Business Analyst</h3>
               <div class="muted">Jun 2019 – Present · Hong Kong (Remote/Consulting)</div>
               <ul>
-                <li>Conduct macro, trade and corporate analysis (Python/SPSS) to generate insights for client decision‑making.</li>
-                <li>Lead multi‑source investment data reconciliation (Excel/offshore inputs/3rd‑party systems) to ensure financial & actuarial consistency.</li>
-                <li>Build supervised learning models (XGBoost/SVM/LightGBM) to improve RVG (Revenue/Visits/Growth) forecasting in e‑commerce.</li>
+                <li>Conduct macro, trade and corporate analysis (Python/SPSS) to generate insights for client decision-making.</li>
+                <li>Lead multi-source investment data reconciliation (Excel/offshore inputs/3rd-party systems) to ensure financial & actuarial consistency.</li>
+                <li>Build supervised learning models (XGBoost/SVM/LightGBM) to improve RVG (Revenue/Visits/Growth) forecasting in e-commerce.</li>
               </ul>
             </div>
             <div>
               <h3>DHgate.com — Capstone Project (Team Lead)</h3>
               <div class="muted">Mar 2023 – May 2023 · Shenzhen</div>
               <ul>
-                <li>Modeled US TikTok live‑commerce data with OLS/Lasso/Random Forest/XGBoost/SVM to identify sales & audience growth drivers.</li>
-                <li>Produced data‑driven SOP with recommendations on assortment mix, audience sizing, and items per stream (see Publications).</li>
+                <li>Modeled US TikTok live-commerce data with OLS/Lasso/Random Forest/XGBoost/SVM to identify sales & audience growth drivers.</li>
+                <li>Produced data-driven SOP with recommendations on assortment mix, audience sizing, and items per stream (see Publications).</li>
               </ul>
             </div>
             <div>
@@ -162,15 +191,15 @@
 
         <section class="panel">
           <h2>Selected Projects</h2>
-          <div class="list">
+          <div>
             <div>
-              <h3>COVID‑19 Case & Mortality Forecasting</h3>
-              <div class="muted">Integrated health and mobility data; multi‑step forecasting with leading MAPE across windows.</div>
+              <h3>COVID-19 Case & Mortality Forecasting</h3>
+              <div class="muted">Integrated health and mobility data; multi-step forecasting with leading MAPE across windows.</div>
               <div class="muted">LSTM / Prophet · Feature Store · MLOps</div>
             </div>
             <div>
               <h3>Urban AQI Forecasting (Thailand)</h3>
-              <div class="muted">Engineered weather & pollution features and ensemble learning to lift recall on high‑pollution days.</div>
+              <div class="muted">Engineered weather & pollution features and ensemble learning to lift recall on high-pollution days.</div>
               <div class="muted">XGBoost · SHAP · Deployment</div>
             </div>
             <div>
@@ -180,10 +209,11 @@
             </div>
           </div>
         </section>
-
+      </main>
+    </div>
 
     <footer>
-      © <span id="y"></span> Jagger Li · Built with ♥ · Hosted on GitHub Pages
+      © <span id="y"></span> Jagger Li · Built with ♥ · Hosted on GitHub
     </footer>
   </div>
   <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
