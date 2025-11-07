@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jagger Jie Li | Data Scientist</title>
-  <meta name="description" content="Portfolio of Jagger Jie Li — Data Scientist / Senior Business Analyst. Projects, experience, education, and contact." />
+  <meta name="description" content="Portfolio of Jagger Jie Li — Data Scientist. Projects, experience, education, and contact." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%23000'/><text x='50' y='62' font-size='56' text-anchor='middle' fill='%23fff' font-family='Arial,sans-serif'>J</text></svg>">
   <style>
     /* ===== 默认浅蓝主题 ===== */
@@ -225,7 +225,7 @@
           <h2>Experience</h2>
           <div style="display:grid;gap:14px;">
             <div>
-              <h3>Freelancer — Data Scientist / Senior Business Analyst</h3>
+              <h3>Freelancer — Data Scientist</h3>
               <div class="muted">Jun 2019 – Present · Hong Kong (Remote/Consulting)</div>
               <ul>
                 <li>Conduct macro, trade and corporate analysis (Python/SPSS) to generate insights for client decision-making.</li>
@@ -264,9 +264,17 @@
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
     const root=document.documentElement,btn=document.getElementById('themeBtn'),text=document.getElementById('themeText');
-    function applyTheme(t){root.setAttribute('data-theme',t);if(t==='dark'){btn.firstChild.textContent='☀️ ';text.textContent='Light';}else{btn.firstChild.textContent='🌙 ';text.textContent='Dark';}localStorage.setItem('theme',t);}
+    function applyTheme(t){
+      root.setAttribute('data-theme',t);
+      if(t==='dark'){btn.firstChild.textContent='☀️ ';text.textContent='Light';}
+      else{btn.firstChild.textContent='🌙 ';text.textContent='Dark';}
+      localStorage.setItem('theme',t);
+    }
     const saved=localStorage.getItem('theme');if(saved){applyTheme(saved);}
-    btn.addEventListener('click',()=>{const cur=root.getAttribute('data-theme')||'light';applyTheme(cur==='light'?'dark':'light');});
+    btn.addEventListener('click',()=>{
+      const cur=root.getAttribute('data-theme')||'light';
+      applyTheme(cur==='light'?'dark':'light');
+    });
   </script>
 </body>
 </html>
