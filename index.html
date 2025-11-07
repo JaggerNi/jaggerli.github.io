@@ -50,7 +50,7 @@
       text-justify: inter-word;
     }
 
-    /* ❤️ 渐变闪动心跳 */
+    /* ❤️ 渐变闪动心跳 + hover 发光 */
     .heart {
       display:inline-block;
       background: linear-gradient(45deg, #ff4d4d, #ff6ec7, #ffa94d, #ff4d4d);
@@ -59,6 +59,10 @@
       -webkit-text-fill-color: transparent;
       animation: heartbeat 1.5s ease-in-out infinite, gradientMove 6s ease infinite;
       transform-origin:center;
+      transition: filter 0.3s ease;
+    }
+    .heart:hover {
+      filter: drop-shadow(0 0 8px #ff8fa3);
     }
     @keyframes heartbeat {
       0%, 100% { transform: scale(1); }
@@ -78,18 +82,6 @@
       .side{flex:unset}
     }
   </style>
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Person",
-    "name":"Jagger Jie Li",
-    "url":"https://www.jaggerli.com",
-    "jobTitle":"Data Scientist / Senior Business Analyst",
-    "email":"mailto:Jaggerxlee@gmail.com",
-    "telephone":"+85255650353",
-    "address":{"@type":"PostalAddress","addressLocality":"Hong Kong"}
-  }
-  </script>
 </head>
 <body>
   <div class="wrap">
@@ -110,8 +102,11 @@
     </header>
 
     <div class="layout">
+      <!-- Sidebar -->
       <aside class="panel side">
         <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
+
+        <!-- Education -->
         <div class="block">
           <h2>Education</h2>
           <div>
@@ -123,8 +118,9 @@
           </div>
         </div>
 
+        <!-- Publications -->
         <div class="block">
-          <h2>Publications & Certifications</h2>
+          <h2>Publications</h2>
           <ul style="margin:0;padding-left:18px;line-height:1.6;">
             <li>
               DHgate.com’ Project:
@@ -132,12 +128,32 @@
                 Standard Operating Procedure for TikTok Live-Streaming E-commerce in the U.S. Region
               </a>
             </li>
-            <li>National Computer Rank Certifications (VB Programming, Network Tech — Level II/III)</li>
-            <li>Introduction to Data Analysis with Python & R (CluBear) — Certificate</li>
-            <li>GBA FinTech Talent initiative (Bloomberg) — Participant</li>
           </ul>
         </div>
 
+        <!-- Selected Projects (moved here) -->
+        <div class="block">
+          <h2>Selected Projects</h2>
+          <ul style="margin:0;padding-left:18px;line-height:1.6;">
+            <li>
+              <strong>COVID-19 Case & Mortality Forecasting</strong><br>
+              Integrated health and mobility data; multi-step forecasting with leading MAPE across windows.<br>
+              <span class="muted">LSTM / Prophet · Feature Store · MLOps</span>
+            </li>
+            <li>
+              <strong>Urban AQI Forecasting (Thailand)</strong><br>
+              Engineered weather & pollution features and ensemble learning to lift recall on high-pollution days.<br>
+              <span class="muted">XGBoost · SHAP · Deployment</span>
+            </li>
+            <li>
+              <strong>FinTech Index & Retail Growth (Banking)</strong><br>
+              Panel of 20 banks (2015–2024); quantified elasticities of IT investment, DAU & app downloads to revenue.<br>
+              <span class="muted">Panel Data · 2SLS / DID</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Links -->
         <div class="block" style="margin-top:auto;">
           <h2>Links</h2>
           <div class="links-inline">
@@ -148,6 +164,7 @@
         </div>
       </aside>
 
+      <!-- Main -->
       <main class="main">
         <section class="panel">
           <h2>Profile</h2>
@@ -193,27 +210,6 @@
                 <li>Partnered with Finance/HR to build compensation analytics and performance linkage.</li>
                 <li>Built training programs from frontline to management (rotation, onboarding, leadership development).</li>
               </ul>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel">
-          <h2>Selected Projects</h2>
-          <div>
-            <div>
-              <h3>COVID-19 Case & Mortality Forecasting</h3>
-              <div class="muted">Integrated health and mobility data; multi-step forecasting with leading MAPE across windows.</div>
-              <div class="muted">LSTM / Prophet · Feature Store · MLOps</div>
-            </div>
-            <div>
-              <h3>Urban AQI Forecasting (Thailand)</h3>
-              <div class="muted">Engineered weather & pollution features and ensemble learning to lift recall on high-pollution days.</div>
-              <div class="muted">XGBoost · SHAP · Deployment</div>
-            </div>
-            <div>
-              <h3>FinTech Index & Retail Growth (Banking)</h3>
-              <div class="muted">Panel of 20 banks (2015–2024); quantified elasticities of IT investment, DAU & app downloads to revenue.</div>
-              <div class="muted">Panel Data · 2SLS / DID</div>
             </div>
           </div>
         </section>
