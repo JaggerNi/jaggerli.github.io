@@ -31,6 +31,8 @@
     .muted{color:var(--muted)}
     .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#0b1222;border:1px solid #334155;color:#cbd5e1;font-size:12px;margin:0 6px 6px 0}
     .list{display:grid;gap:10px}
+    .links-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .links-inline .sep{opacity:.6}
     .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #334155;border-radius:999px;color:#cbd5e1;background:#0b1222aa}
     .contact a{color:#e5e7eb}
     footer{margin-top:24px;color:#94a3b8;text-align:center}
@@ -56,14 +58,14 @@
         <div class="logo">J</div>
         <div class="title">
           <h1>Jagger Jie Li</h1>
-          <div class="sub">Data Scientist · Senior Business Analyst · Hong Kong</div>
+          <div class="sub">Data Scientist · Senior Business Analyst · Hong Kong Island</div>
         </div>
       </div>
       <div class="contact panel" style="display:flex;gap:12px;align-items:center">
         <span class="badge">IANG Visa Holder</span>
         <a href="mailto:Jaggerxlee@gmail.com">Jaggerxlee@gmail.com</a>
         <span>·</span>
-        <a href="tel:+85255650353">+852‑5565‑0353</a>
+        <a href="tel:+85255650353">+852-5565-0353</a>
       </div>
     </header>
 
@@ -71,20 +73,28 @@
       <!-- Sidebar -->
       <aside class="panel side">
         <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
+
+        <!-- Education moved to sidebar top -->
         <div class="block">
-          <h2>Skills</h2>
-          <div>
-            <span class="pill">Python</span><span class="pill">SQL</span><span class="pill">VBA</span>
-            <span class="pill">Databricks</span><span class="pill">Azure</span><span class="pill">Oracle Cloud</span>
-            <span class="pill">Tableau</span><span class="pill">Excel</span><span class="pill">R Studio</span>
-            <span class="pill">Time Series</span><span class="pill">Predictive Modeling</span>
-            <span class="pill">ETL</span><span class="pill">BI Dashboarding</span>
+          <h2>Education</h2>
+          <div class="list">
+            <div>
+              <h3>HKU — MSc in Business Analytics (STEM)</h3>
+              <div class="muted">Aug 2022 – Dec 2023 · FinTech Club President</div>
+            </div>
+            <div>
+              <h3>HUST — BSc in Management (Public Administration)</h3>
+              <div class="muted">Sep 2013 – Jul 2017 · GPA 3.65/4.0 (Top 20%)</div>
+            </div>
           </div>
         </div>
+
+        <!-- Links in one line -->
         <div class="block">
           <h2>Links</h2>
-          <div class="list">
+          <div class="links-inline">
             <a href="https://github.com/JaggerNi" target="_blank" rel="noopener">GitHub</a>
+            <span class="sep">|</span>
             <a href="https://www.linkedin.com/in/jaggerxli/" target="_blank" rel="noopener">LinkedIn</a>
           </div>
         </div>
@@ -94,21 +104,33 @@
       <main class="main" style="display:grid;gap:18px">
         <section class="panel">
           <h2>Profile</h2>
-          <p>Data Scientist with strong Python & SQL foundation; experienced in designing ETL pipelines, building predictive models, and turning complex data into actionable insights. Comfortable bridging business and technical stakeholders. Hands‑on with Databricks, Azure, Tableau, and Oracle Cloud across finance, investment research, and enterprise analytics scenarios.</p>
+          <p>Data Scientist with strong Python & SQL foundation; experienced in designing ETL pipelines, building predictive models, and turning complex data into actionable insights. Comfortable bridging business and technical stakeholders. Hands-on with Databricks, Azure, Tableau, and Oracle Cloud across finance, investment research, and enterprise analytics scenarios.</p>
+        </section>
+
+        <!-- INTERESTS & SKILLS moved here and replaced -->
+        <section class="panel">
+          <h2>INTERESTS &amp; SKILLS</h2>
+          <ul>
+            <li><strong>Programming Languages:</strong> Python, SQL, VBA</li>
+            <li><strong>Data Analytics Tools:</strong> Databricks, Colab, Tableau, Excel, R Studio</li>
+            <li><strong>Cloud &amp; Data Platforms:</strong> Azure, Oracle Cloud, Snowflake (familiarity), Databricks</li>
+            <li><strong>Data Science Techniques:</strong> Predictive Modeling, Time Series, Macroeconomic &amp; Financial Modeling</li>
+            <li><strong>Other:</strong> ETL Pipelines, Reporting Automation, BI Dashboarding, Cross-functional Communication</li>
+          </ul>
         </section>
 
         <section class="panel">
-          <h2>Education</h2>
+          <h2>Education (for Recruiter quick view)</h2>
           <div class="list">
             <div>
               <h3>The University of Hong Kong — MSc in Business Analytics (STEM)</h3>
               <div class="muted">Aug 2022 – Dec 2023 · Hong Kong · FinTech Club President</div>
-              <div class="muted">Key coursework: Corporate Finance, VC/PE, Operations Analytics, Data‑Driven Decision Making</div>
+              <div class="muted">Key coursework: Corporate Finance, VC/PE, Operations Analytics, Data-Driven Decision Making</div>
             </div>
             <div>
               <h3>Huazhong University of Science and Technology — BSc in Management (Public Administration)</h3>
               <div class="muted">Sep 2013 – Jul 2017 · Wuhan · GPA 3.65/4.0 (Top 20%)</div>
-              <div class="muted">Focus: Accounting & Finance, Macroeconomics, Political Science</div>
+              <div class="muted">Focus: Accounting &amp; Finance, Macroeconomics, Political Science</div>
             </div>
           </div>
         </section>
