@@ -32,36 +32,64 @@
     /* === 等高双栏（flex 布局） === */
     .layout{
       display:flex;
-      align-items:stretch;     /* 两列等高 */
+      align-items:stretch;
       gap:22px;
     }
     .side{
-      flex:0 0 320px;          /* 左栏固定宽度 */
+      flex:0 0 320px;
       display:flex;
       flex-direction:column;
+      text-align:justify;
     }
     .main{
-      flex:1;                  /* 右栏自适应 */
+      flex:1;
       display:flex;
       flex-direction:column;
-      gap:18px;                /* 右栏各 panel 之间的间距 */
+      gap:18px;
     }
 
-    .panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px}
-    .photo{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:16px;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .panel{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+    }
+    .photo{
+      width:100%;
+      aspect-ratio:4/5;
+      object-fit:cover;
+      border-radius:16px;
+      border:1px solid var(--border);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+    }
     .block{margin-bottom:18px}
-    h2{font-size:18px;margin:0 0 10px}
-    h3{font-size:16px;margin:0 0 4px}
+    h2{font-size:18px;margin:0 0 10px;text-align:left}
+    h3{font-size:16px;margin:0 0 4px;text-align:left}
     .muted{color:var(--muted)}
     .links-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .links-inline .sep{opacity:.6}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #334155;border-radius:999px;color:#cbd5e1;background:#0b1222aa}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border:1px solid #334155;
+      border-radius:999px;
+      color:#cbd5e1;
+      background:#0b1222aa;
+    }
     footer{margin-top:24px;color:#94a3b8;text-align:center}
+
+    /* === 全文文字两端对齐 === */
+    p, li, div, span {
+      text-align: justify;
+      text-justify: inter-word;
+    }
 
     /* 移动端堆叠 */
     @media (max-width:960px){
       .layout{flex-direction:column}
-      .side{flex:unset} /* 取消固定宽度 */
+      .side{flex:unset}
     }
   </style>
   <script type="application/ld+json">
