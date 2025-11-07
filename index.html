@@ -9,9 +9,7 @@
   <style>
     /* ===== 默认浅蓝主题 ===== */
     :root{
-      --bg:#eaf3ff;
-      --bg2:#f6faff;
-      --bg3:#ffffff;
+      --bg:#eaf3ff; --bg2:#f6faff; --bg3:#ffffff;
       --panel:rgba(255,255,255,0.88);
       --muted:#5b6b87;
       --primary:#2b6cb0;
@@ -21,87 +19,79 @@
       --text:#1f2937;
       --shadow:0 8px 20px rgba(16, 42, 87, 0.08);
       --link:#2b6cb0;
-      --sidew:320px;     /* 侧栏宽 */
-      --gap:22px;        /* 主体左右间距 */
+      --sidew:320px;      /* 左栏宽度 */
+      --gap:22px;         /* 两栏间距 */
+      --wrapmax:1060px;   /* 页面最大宽 */
     }
-
     /* ===== 深色主题 ===== */
     html[data-theme="dark"]{
       --bg:#0f172a; --bg2:#0b1222; --bg3:#111827;
       --panel:#0b1222ee;
       --muted:#94a3b8;
-      --primary:#22d3ee;
-      --accent:#a78bfa;
+      --primary:#22d3ee; --accent:#a78bfa;
       --border:#1f2937;
       --card:#111827f2;
-      --text:#e5e7eb;
+      --text:#e5e7eb; --link:#22d3ee;
       --shadow:0 8px 20px rgba(0,0,0,0.25);
-      --link:#22d3ee;
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0;
-      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      color:var(--text);
-      background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 50%,var(--bg3) 100%);
-      background-attachment:fixed;
+      margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--text);
+      background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 50%,var(--bg3) 100%);background-attachment:fixed;
     }
-
     a{color:var(--link);text-decoration:none}
     a:hover{text-decoration:underline}
+    .wrap{max-width:var(--wrapmax);margin:0 auto;padding:24px}
 
-    .wrap{max-width:1060px;margin:0 auto;padding:24px}
-
-    /* 顶部标题行 */
-    header{
-      display:flex;
-      align-items:center;
-      gap:16px;
-      margin-bottom:10px; /* 留出下面对齐行的空间 */
+    /* === 顶部一行：左边名字，右边联系条（两者垂直居中、同一行“平齐”） === */
+    .top-row{
+      display:flex; align-items:center; gap:12px; margin-bottom:18px;
+      /* 让左边名字与右边主栏在同一“左起点”：用左栏宽度作缩进 */
+      padding-left:calc(var(--sidew) + var(--gap));
     }
-    .brand{display:flex;align-items:center;gap:14px;}
+    .brand{display:flex;align-items:center;gap:14px; min-width:320px;}
     .logo{width:46px;height:46px;border-radius:12px;background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800}
     .title h1{margin:0;font-size:30px;color:var(--text)}
-    .title .sub{color:var(--muted)}
+    .title .sub{color:var(--muted);margin-top:2px}
 
-    /* === 关键：联系栏与主栏左边缘对齐 === */
-    .contact-row{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      margin-left:calc(var(--sidew) + var(--gap));
-      width:calc(100% - (var(--sidew) + var(--gap)));
-      margin-bottom:18px; /* 与下面面板的垂直节奏一致 */
-    }
     .contact-bar{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:12px 16px;
-      border:1px solid var(--border);
-      border-radius:18px;
-      background:var(--card);
-      box-shadow:var(--shadow);
-      flex:1;
-      min-width:0;
+      flex:1; min-width:0;
+      padding:12px 14px; border:1px solid var(--border); border-radius:18px;
+      background:var(--card); box-shadow:var(--shadow);
+
+      /* 均匀横向分布（3等分），分隔符用伪元素画竖线 */
+      display:grid; grid-template-columns:1fr 1fr 1fr; align-items:center;
+      column-gap:12px; text-align:center;
     }
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--text);background:var(--panel);white-space:nowrap;}
+    .contact-item{position:relative;padding:6px 10px;border-radius:999px}
+    .contact-item.badge{
+      border:1px solid var(--border); background:var(--panel); color:var(--text); white-space:nowrap;
+    }
+    .contact-item.sep{display:none;} /* 不再需要“·”，改用竖线分隔符 */
+
+    /* 竖线分隔符（只给第1、2列右侧加） */
+    .contact-item:nth-child(1)::after,
+    .contact-item:nth-child(2)::after{
+      content:""; position:absolute; top:50%; transform:translateY(-50%);
+      right:-6px; width:1px; height:60%; background:var(--border);
+    }
+
     .theme-toggle{
+      margin-left:12px;
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 12px;border:1px solid var(--border);border-radius:999px;
       background:var(--card);box-shadow:var(--shadow);
       cursor:pointer;user-select:none;font-weight:600;color:var(--text);white-space:nowrap;
     }
 
-    /* 主体布局 */
-    .layout{display:flex;align-items:stretch;justify-content:space-between;gap:var(--gap);min-height:calc(100vh - 200px);}
-    .side{flex:0 0 var(--sidew);display:flex;flex-direction:column;justify-content:space-between;text-align:justify;}
+    /* === 主体等高双栏 === */
+    .layout{display:flex;align-items:stretch;gap:var(--gap);min-height:calc(100vh - 220px);}
+    .side{flex:0 0 var(--sidew);display:flex;flex-direction:column;gap:18px;}
     .main{flex:1;display:flex;flex-direction:column;gap:18px;}
     .panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
     .photo{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:16px;border:1px solid var(--border);box-shadow:var(--shadow)}
-    .block{margin-bottom:18px}
     h2{font-size:18px;margin:0 0 10px;color:var(--text)}
     h3{font-size:16px;margin:0 0 4px;color:var(--text)}
     .muted{color:var(--muted)}
@@ -111,23 +101,26 @@
     p, li, div, span{text-align:justify;text-justify:inter-word;}
 
     /* ❤️ 动态发光心 */
-    .heart{display:inline-block;background:linear-gradient(45deg,#ff4d4d,#ff6ec7,#ffa94d,#ff4d4d);background-size:400% 400%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:heartbeat 1.5s ease-in-out infinite,gradientMove 6s ease infinite;transform-origin:center;transition:filter 0.3s ease;}
-    .heart:hover{filter:drop-shadow(0 0 8px #ff99a5);}
-    @keyframes heartbeat{0%,100%{transform:scale(1);}25%{transform:scale(1.3);}40%{transform:scale(1);}60%{transform:scale(1.3);}80%{transform:scale(1);}}
-    @keyframes gradientMove{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+    .heart{display:inline-block;background:linear-gradient(45deg,#ff4d4d,#ff6ec7,#ffa94d,#ff4d4d);background-size:400% 400%;
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:heartbeat 1.5s ease-in-out infinite,gradientMove 6s ease infinite;transform-origin:center;transition:filter .3s}
+    .heart:hover{filter:drop-shadow(0 0 8px #ff99a5)}
+    @keyframes heartbeat{0%,100%{transform:scale(1)}25%{transform:scale(1.3)}40%{transform:scale(1)}60%{transform:scale(1.3)}80%{transform:scale(1)}}
+    @keyframes gradientMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-    /* 响应式 */
+    /* 响应式：小屏改为换行 */
     @media (max-width:960px){
-      :root{ --sidew:100%; }
-      .layout{flex-direction:column}
-      .contact-row{margin-left:0;width:100%;}
+      .top-row{padding-left:0;flex-direction:column;align-items:stretch}
+      .brand{min-width:unset}
+      .contact-bar{grid-template-columns:1fr;row-gap:8px}
+      .contact-item:nth-child(1)::after,
+      .contact-item:nth-child(2)::after{display:none}
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- 顶部品牌 -->
-    <header>
+    <!-- 顶部一行：名字 与 联系条 同行“平齐” -->
+    <div class="top-row">
       <div class="brand">
         <div class="logo">J</div>
         <div class="title">
@@ -135,16 +128,13 @@
           <div class="sub">Data Scientist · Hong Kong</div>
         </div>
       </div>
-    </header>
 
-    <!-- 这行与主栏左边缘对齐 -->
-    <div class="contact-row">
       <div class="contact-bar">
-        <span class="badge">IANG Visa Holder</span>
-        <a href="mailto:Jaggerxlee@gmail.com">Jaggerxlee@gmail.com</a>
-        <span>·</span>
-        <a href="tel:+85255650353">+852-5565-0353</a>
+        <span class="contact-item badge">IANG Visa Holder</span>
+        <a class="contact-item" href="mailto:Jaggerxlee@gmail.com">Jaggerxlee@gmail.com</a>
+        <a class="contact-item" href="tel:+85255650353">+852-5565-0353</a>
       </div>
+
       <button id="themeBtn" class="theme-toggle" aria-label="Toggle theme">
         🌙 <span id="themeText">Dark</span>
       </button>
@@ -153,45 +143,43 @@
     <div class="layout">
       <!-- 左栏 -->
       <aside class="panel side">
+        <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
+
         <div>
-          <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
-          <div class="block">
-            <h2>Education</h2>
-            <div>
-              <h3>Master of Science<br>The University of Hong Kong<br>Business Analytics</h3>
-              <div class="muted">Aug 2022 – Dec 2023<br>FinTech Club President</div>
+          <h2>Education</h2>
+          <h3>Master of Science<br>The University of Hong Kong<br>Business Analytics</h3>
+          <div class="muted">Aug 2022 – Dec 2023<br>FinTech Club President</div>
 
-              <h3>Bachelor of Management<br>Huazhong University of Science and Technology<br>Public Administration</h3>
-              <div class="muted">Sep 2013 – Jul 2017<br>Academic Excellence Award<br>GPA 3.65/4.0 (Top 20%)</div>
-            </div>
-          </div>
-
-          <div class="block">
-            <h2>Publications</h2>
-            <ul style="margin:0;padding-left:18px;line-height:1.6;">
-              <li>DHgate.com’ Project:
-                <a href="https://github.com/JaggerNi/docs/blob/main/TikTok_SOP.pdf" target="_blank" rel="noopener">
-                  Standard Operating Procedure for TikTok Live-Streaming E-commerce in the U.S. Region
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="block">
-            <h2>Selected Projects</h2>
-            <ul style="margin:0;padding-left:18px;line-height:1.6;">
-              <li><strong>Urban AQI Forecasting (Thailand)</strong><br>
-                Engineered weather & pollution features and ensemble learning to lift recall on high-pollution days.<br>
-                <span class="muted">XGBoost · SHAP · Deployment</span></li>
-              <li><strong>FinTech Index & Retail Growth (Banking)</strong><br>
-                Panel of 20 banks (2015–2024); quantified elasticities of IT investment, DAU & app downloads to revenue.<br>
-                <span class="muted">Panel Data · 2SLS / DID</span></li>
-            </ul>
-          </div>
+          <h3 style="margin-top:10px;">Bachelor of Management<br>Huazhong University of Science and Technology<br>Public Administration</h3>
+          <div class="muted">Sep 2013 – Jul 2017<br>Academic Excellence Award · GPA 3.65/4.0 (Top 20%)</div>
         </div>
 
-        <div class="block" style="margin-top:auto;">
-          <h2>Links</h2>
+        <div>
+          <h2 style="margin-top:18px;">Publications</h2>
+          <ul style="margin:0;padding-left:18px;line-height:1.6;">
+            <li>
+              DHgate.com’ Project:
+              <a href="https://github.com/JaggerNi/docs/blob/main/TikTok_SOP.pdf" target="_blank" rel="noopener">
+                Standard Operating Procedure for TikTok Live-Streaming E-commerce in the U.S. Region
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 style="margin-top:18px;">Selected Projects</h2>
+          <ul style="margin:0;padding-left:18px;line-height:1.6;">
+            <li><strong>Urban AQI Forecasting (Thailand)</strong><br>
+              Engineered weather & pollution features and ensemble learning to lift recall on high-pollution days.<br>
+              <span class="muted">XGBoost · SHAP · Deployment</span></li>
+            <li><strong>FinTech Index & Retail Growth (Banking)</strong><br>
+              Panel of 20 banks (2015–2024); quantified elasticities of IT investment, DAU & app downloads to revenue.<br>
+              <span class="muted">Panel Data · 2SLS / DID</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 style="margin-top:18px;">Links</h2>
           <div class="links-inline">
             <a href="https://github.com/JaggerNi" target="_blank" rel="noopener">GitHub</a>
             <span class="sep">|</span>
@@ -200,7 +188,7 @@
         </div>
       </aside>
 
-      <!-- 主栏 -->
+      <!-- 右栏 -->
       <main class="main">
         <section class="panel">
           <h2>Profile</h2>
@@ -269,7 +257,7 @@
       else{btn.firstChild.textContent='🌙 ';text.textContent='Dark';}
       localStorage.setItem('theme',t);
     }
-    const saved=localStorage.getItem('theme');if(saved){applyTheme(saved);}
+    const saved=localStorage.getItem('theme'); if(saved){applyTheme(saved);}
     btn.addEventListener('click',()=>{const cur=root.getAttribute('data-theme')||'light';applyTheme(cur==='light'?'dark':'light');});
   </script>
 </body>
