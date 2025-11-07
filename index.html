@@ -8,73 +8,80 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%23000'/><text x='50' y='62' font-size='56' text-anchor='middle' fill='%23fff' font-family='Arial,sans-serif'>J</text></svg>">
   <style>
     :root{
-      --bg:#0f172a; --panel:#0b1222ee; --muted:#94a3b8; --primary:#22d3ee; --accent:#a78bfa;
-      --border:#1f2937; --card:#111827f2; --ring:0 0 0 3px rgba(34,211,238,.35);
+      --bg:#fde2e4; /* 背景粉色基调 */
+      --bg2:#fadadd;
+      --panel:rgba(255,255,255,0.85);
+      --muted:#6b7280;
+      --primary:#e75480; /* 玫瑰粉 */
+      --accent:#a78bfa;
+      --border:#e5e7eb;
+      --card:rgba(255,255,255,0.92);
     }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#e5e7eb;
-      background:
-        radial-gradient(1200px 600px at 10% -10%,rgba(167,139,250,.15),transparent),
-        radial-gradient(900px 600px at 110% 10%,rgba(34,211,238,.12),transparent),
-        var(--bg);
+      margin:0;
+      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:#374151;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, #fff0f5 100%);
+      background-attachment: fixed;
     }
+
     a{color:var(--primary);text-decoration:none}
     a:hover{text-decoration:underline}
+
     .wrap{max-width:1060px;margin:0 auto;padding:24px}
     header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
     .brand{display:flex;align-items:center;gap:14px}
-    .logo{width:46px;height:46px;border-radius:12px;background:#000;display:grid;place-items:center;color:#fff;font-weight:800}
-    .title h1{margin:0;font-size:30px}
+    .logo{width:46px;height:46px;border-radius:12px;background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800}
+    .title h1{margin:0;font-size:30px;color:#222}
     .title .sub{color:var(--muted)}
 
     .layout{display:flex;align-items:stretch;gap:22px;}
     .side{flex:0 0 320px;display:flex;flex-direction:column;text-align:justify;}
     .main{flex:1;display:flex;flex-direction:column;gap:18px;}
 
-    .panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px}
-    .photo{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:16px;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 8px 20px rgba(0,0,0,0.05)}
+    .photo{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:16px;border:1px solid var(--border);box-shadow:0 8px 18px rgba(0,0,0,0.08)}
     .block{margin-bottom:18px}
-    h2{font-size:18px;margin:0 0 10px;text-align:left}
-    h3{font-size:16px;margin:0 0 4px;text-align:left}
+    h2{font-size:18px;margin:0 0 10px;color:#222;text-align:left}
+    h3{font-size:16px;margin:0 0 4px;color:#333;text-align:left}
     .muted{color:var(--muted)}
     .links-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .links-inline .sep{opacity:.6}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #334155;border-radius:999px;color:#cbd5e1;background:#0b1222aa}
-    footer{margin-top:24px;color:#94a3b8;text-align:center}
+    .links-inline .sep{opacity:.5}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #d1d5db;border-radius:999px;color:#555;background:rgba(255,255,255,0.6)}
+    footer{margin-top:24px;color:#6b7280;text-align:center}
 
-    /* 全文两端对齐 */
     p, li, div, span {
       text-align: justify;
       text-justify: inter-word;
     }
 
-    /* ❤️ 渐变闪动心跳 + hover 发光 */
+    /* ❤️ 渐变心跳 + hover发光 */
     .heart {
       display:inline-block;
-      background: linear-gradient(45deg, #ff4d4d, #ff6ec7, #ffa94d, #ff4d4d);
-      background-size: 400% 400%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      background:linear-gradient(45deg, #ff4d4d, #ff6ec7, #ffa94d, #ff4d4d);
+      background-size:400% 400%;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
       animation: heartbeat 1.5s ease-in-out infinite, gradientMove 6s ease infinite;
       transform-origin:center;
-      transition: filter 0.3s ease;
+      transition:filter 0.3s ease;
     }
-    .heart:hover {
-      filter: drop-shadow(0 0 8px #ff8fa3);
-    }
+    .heart:hover { filter: drop-shadow(0 0 8px #ff99a5); }
+
     @keyframes heartbeat {
-      0%, 100% { transform: scale(1); }
-      25% { transform: scale(1.3); }
-      40% { transform: scale(1); }
-      60% { transform: scale(1.3); }
-      80% { transform: scale(1); }
+      0%,100%{transform:scale(1);}
+      25%{transform:scale(1.3);}
+      40%{transform:scale(1);}
+      60%{transform:scale(1.3);}
+      80%{transform:scale(1);}
     }
     @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
     }
 
     @media (max-width:960px){
@@ -102,11 +109,9 @@
     </header>
 
     <div class="layout">
-      <!-- Sidebar -->
       <aside class="panel side">
         <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
 
-        <!-- Education -->
         <div class="block">
           <h2>Education</h2>
           <div>
@@ -118,7 +123,6 @@
           </div>
         </div>
 
-        <!-- Publications -->
         <div class="block">
           <h2>Publications</h2>
           <ul style="margin:0;padding-left:18px;line-height:1.6;">
@@ -131,7 +135,6 @@
           </ul>
         </div>
 
-        <!-- Selected Projects (moved here) -->
         <div class="block">
           <h2>Selected Projects</h2>
           <ul style="margin:0;padding-left:18px;line-height:1.6;">
@@ -153,7 +156,6 @@
           </ul>
         </div>
 
-        <!-- Links -->
         <div class="block" style="margin-top:auto;">
           <h2>Links</h2>
           <div class="links-inline">
@@ -164,7 +166,6 @@
         </div>
       </aside>
 
-      <!-- Main -->
       <main class="main">
         <section class="panel">
           <h2>Profile</h2>
