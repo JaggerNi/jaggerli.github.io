@@ -3,337 +3,198 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hairstyle Matcher | Find Your Best Look</title>
-<meta name="description" content="Upload a photo, choose your preferences, and get a hairstyle suggestion instantly. All in your browser.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%232b6cb0'/><text x='50' y='62' font-size='56' text-anchor='middle' fill='white' font-family='Arial,sans-serif'>H</text></svg>">
+<title>Hairstyle Matcher | AI Powered</title>
+<meta name="description" content="Upload a photo, choose your preferences, and get an AI-generated hairstyle suggestion.">
 <style>
   :root{
-    --bg:#eef5ff; --bg2:#f8fbff;
-    --card:#ffffff; --muted:#6b7280; --text:#1f2937;
-    --primary:#2b6cb0; --accent:#7aa8ff; --border:#dbe3f0;
-    --shadow:0 16px 40px rgba(16,42,87,.12);
-    --ring:0 0 0 8px rgba(43,108,176,.12);
-    --radius:18px;
+    --bg:#eef5ff; --bg2:#f8fbff; --card:#fff; --muted:#6b7280; --text:#1f2937;
+    --primary:#2b6cb0; --accent:#7aa8ff; --border:#dbe3f0; --shadow:0 16px 40px rgba(16,42,87,.12);
+    --ring:0 0 0 8px rgba(43,108,176,.12); --radius:18px;
   }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:var(--text);
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--text);
     background: radial-gradient(1200px 600px at -10% -10%, rgba(122,168,255,.25), transparent),
-                linear-gradient(135deg, var(--bg) 0%, var(--bg2) 70%, #fff 100%);
-  }
-  a{color:var(--primary); text-decoration:none}
-  a:hover{text-decoration:underline}
-  .wrap{max-width:1100px; margin:0 auto; padding:28px}
-
-  /* Header */
-  header{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:20px}
-  .brand{display:flex; align-items:center; gap:14px}
+                linear-gradient(135deg, var(--bg) 0%, var(--bg2) 70%, #fff 100%);}
+  a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+  .brand{display:flex;align-items:center;gap:14px}
   .logo{width:44px;height:44px;border-radius:12px;background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800;box-shadow:var(--shadow)}
-  nav{display:flex; gap:14px; color:var(--muted)}
-  nav a{padding:6px 10px; border-radius:999px}
-  nav a:hover{background:#eaf2ff}
-
-  /* Layout */
-  .grid{
-    display:grid; grid-template-columns: 1.2fr 1fr; gap:22px;
-  }
-  @media (max-width:980px){
-    .grid{grid-template-columns: 1fr}
-  }
-
-  .card{
-    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-    box-shadow:var(--shadow); padding:20px;
-  }
-  .card h2{margin:0 0 12px}
-  .muted{color:var(--muted)}
-  .inline-badges{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
-
-  /* Uploader */
-  .uploader{
-    border:2px dashed #c9d7f0; border-radius:16px; padding:20px; text-align:center;
-    background: linear-gradient(180deg,#fff, #f7fbff);
-    transition:.25s;
-  }
-  .uploader.dragover{border-color:var(--primary); box-shadow:var(--ring)}
-  .uploader input{display:none}
-  .uploader .btn{
-    display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px;
-    background:var(--primary); color:#fff; border:none; cursor:pointer; font-weight:600;
-    box-shadow:0 8px 18px rgba(43,108,176,.25);
-  }
-  .uploader .hint{font-size:13px; color:var(--muted); margin-top:6px}
-  .preview{
-    margin-top:14px; display:flex; gap:14px; align-items:center; justify-content:center; flex-wrap:wrap;
-  }
-  .preview img{
-    max-width:240px; max-height:240px; object-fit:cover; border-radius:14px; border:1px solid var(--border);
-    box-shadow:0 10px 24px rgba(0,0,0,.08);
-  }
-
-  /* Options */
-  .options{display:grid; gap:8px; grid-template-columns: repeat(2, minmax(0,1fr))}
-  @media (max-width:560px){ .options{grid-template-columns: 1fr} }
-  .opt-group{background:#f7fbff; border:1px solid var(--border); border-radius:14px; padding:12px}
-  .chips{display:flex; gap:8px; flex-wrap:wrap}
-  .chip{
-    border:1px solid #cfe0ff; background:#fff; color:#274472;
-    padding:6px 10px; border-radius:999px; cursor:pointer; user-select:none; font-size:14px;
-  }
-  .chip.active{background:#e8f0ff; border-color:var(--primary); color:var(--primary); box-shadow:var(--ring)}
-
-  /* Result */
-  .result{
-    display:none; margin-top:14px; border:1px dashed #d7e4ff; border-radius:14px; padding:14px;
-    background:linear-gradient(180deg,#fff, #f7fbff);
-  }
+  nav{display:flex;gap:14px;color:var(--muted)} nav a{padding:6px 10px;border-radius:999px} nav a:hover{background:#eaf2ff}
+  .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:22px} @media(max-width:980px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .card h2{margin:0 0 12px} .muted{color:var(--muted)} .inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .uploader{border:2px dashed #c9d7f0;border-radius:16px;padding:20px;text-align:center;background:linear-gradient(180deg,#fff,#f7fbff);transition:.25s}
+  .uploader.dragover{border-color:var(--primary);box-shadow:var(--ring)} .uploader input{display:none}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:600;
+       box-shadow:0 8px 18px rgba(43,108,176,.25)} .btn.secondary{background:#eef4ff;color:#274472}
+  .opt{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))} @media(max-width:560px){.opt{grid-template-columns:1fr}}
+  .opt-group{background:#f7fbff;border:1px solid var(--border);border-radius:14px;padding:12px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap} .chip{border:1px solid #cfe0ff;background:#fff;color:#274472;padding:6px 10px;border-radius:999px;cursor:pointer}
+  .chip.active{background:#e8f0ff;border-color:var(--primary);color:var(--primary);box-shadow:var(--ring)}
+  .preview{margin-top:14px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .preview img{max-width:240px;max-height:240px;object-fit:cover;border-radius:14px;border:1px solid var(--border);box-shadow:0 10px 24px rgba(0,0,0,.08)}
+  .result{display:none;margin-top:14px;border:1px dashed #d7e4ff;border-radius:14px;padding:14px;background:linear-gradient(180deg,#fff,#f7fbff)}
   .result.show{display:block}
-  .match-top{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
-  .match-badge{padding:6px 10px; border-radius:999px; background:#eef4ff; border:1px solid #cfe0ff; color:#274472}
-  .match-title{font-size:18px; font-weight:700}
-  .match-grid{display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:10px}
-  @media (max-width:720px){ .match-grid{grid-template-columns: 1fr} }
-  .match-card{border:1px solid var(--border); border-radius:12px; padding:12px; background:#fff}
-  .match-card img{width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:10px; border:1px solid #edf1f7}
-  .cta-row{display:flex; gap:10px; flex-wrap:wrap}
-  .btn{
-    display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px;
-    background:var(--primary); color:#fff; border:none; cursor:pointer; font-weight:600;
-    box-shadow:0 8px 18px rgba(43,108,176,.25);
-  }
-  .btn.secondary{background:#eef4ff; color:#274472}
-  .btn:active{transform:translateY(1px)}
-
-  /* Gallery */
-  .gallery{display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px}
-  @media (max-width:720px){ .gallery{grid-template-columns: repeat(2, minmax(0,1fr))} }
-  .g-item{border:1px solid var(--border); border-radius:12px; background:#fff; overflow:hidden}
-  .g-item .ph{
-    background:linear-gradient(135deg,#b8ccff 0%,#d9e5ff 100%);
-    height:160px; display:grid; place-items:center; color:#1f2f50; font-weight:800; letter-spacing:1px;
-  }
-  .g-item .meta{padding:10px; display:flex; align-items:center; justify-content:space-between}
-  .tag{font-size:12px; color:#274472; background:#eef4ff; border:1px solid #cfe0ff; border-radius:999px; padding:4px 8px}
-
-  /* Footer */
-  footer{margin:24px 0 6px; color:var(--muted); text-align:center}
-  .heart{display:inline-block; background:linear-gradient(45deg,#ff4d4d,#ff6ec7,#ffa94d,#ff4d4d); background-size:400% 400%;
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:beat 1.5s ease-in-out infinite,flow 6s ease infinite}
-  @keyframes beat{0%,100%{transform:scale(1)}25%{transform:scale(1.25)}40%{transform:scale(1)}60%{transform:scale(1.25)}80%{transform:scale(1)}}
-  @keyframes flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .match-top{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .match-badge{padding:6px 10px;border-radius:999px;background:#eef4ff;border:1px solid #cfe0ff;color:#274472}
+  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px} @media(max-width:720px){.match-grid{grid-template-columns:1fr}}
+  .match-card{border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff}
+  .match-card img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;border:1px solid #edf1f7}
+  .skeleton{width:100%;aspect-ratio:4/5;border-radius:10px;background:linear-gradient(90deg,#eef2f7 0%,#f7f9fc 50%,#eef2f7 100%);
+    background-size:200% 100%;animation:sk 1.2s infinite linear}
+  @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  .toggle{display:inline-flex;align-items:center;gap:8px}
+  .toggle input{appearance:none;width:44px;height:26px;border-radius:999px;position:relative;background:#cfdaf2;outline:none;cursor:pointer}
+  .toggle input:checked{background:#2b6cb0}
+  .toggle input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+  .toggle input:checked::after{left:21px}
+  footer{margin:24px 0 6px;color:var(--muted);text-align:center}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- Header -->
-    <header>
-      <div class="brand">
-        <div class="logo">H</div>
-        <div>
-          <h1 style="margin:0 0 4px">Hairstyle Matcher</h1>
-          <div class="muted">Upload · Choose · Match — all in your browser</div>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">H</div>
+      <div>
+        <h1 style="margin:0 0 4px">Hairstyle Matcher</h1>
+        <div class="muted">Upload · Choose · <strong>AI Generate</strong></div>
+      </div>
+    </div>
+    <nav>
+      <a href="#upload">Upload</a>
+      <a href="#result">Result</a>
+    </nav>
+  </header>
+
+  <div class="grid">
+    <!-- 左侧：上传与选项 -->
+    <section class="card" id="upload">
+      <h2>1) Upload & Preferences</h2>
+      <div class="uploader" id="dropzone">
+        <p style="margin:0 0 10px"><strong>Drag & drop</strong> your photo here, or</p>
+        <label class="btn">
+          <input id="fileInput" type="file" accept="image/*"> Choose a Photo
+        </label>
+        <div class="muted" style="font-size:13px;margin-top:6px">Processed locally · Your image isn’t uploaded unless AI is enabled</div>
+        <div class="preview" id="preview"></div>
+      </div>
+
+      <div class="opt" style="margin-top:14px">
+        <div class="opt-group">
+          <div class="muted" style="margin-bottom:8px">Length</div>
+          <div class="chips" data-name="length">
+            <span class="chip">Short</span><span class="chip">Medium</span><span class="chip">Long</span>
+          </div>
+        </div>
+        <div class="opt-group">
+          <div class="muted" style="margin-bottom:8px">Style</div>
+          <div class="chips" data-name="style">
+            <span class="chip">Professional</span><span class="chip">Trendy</span><span class="chip">Casual</span>
+          </div>
+        </div>
+        <div class="opt-group">
+          <div class="muted" style="margin-bottom:8px">Face Shape</div>
+          <div class="chips" data-name="shape">
+            <span class="chip">Oval</span><span class="chip">Round</span><span class="chip">Square</span><span class="chip">Heart</span>
+          </div>
+        </div>
+        <div class="opt-group">
+          <div class="muted" style="margin-bottom:8px">Occasion</div>
+          <div class="chips" data-name="occasion">
+            <span class="chip">Work</span><span class="chip">Date</span><span class="chip">Event</span>
+          </div>
         </div>
       </div>
-      <nav>
-        <a href="#upload">Upload</a>
-        <a href="#result">Result</a>
-        <a href="#gallery">Gallery</a>
-        <a href="#faq">FAQ</a>
-      </nav>
-    </header>
 
-    <div class="grid">
-      <!-- Left: Upload & Options -->
-      <section class="card" id="upload">
-        <h2>1) Upload & Preferences</h2>
-        <div class="uploader" id="dropzone">
-          <p style="margin:0 0 10px"><strong>Drag & drop</strong> your photo here, or</p>
-          <label class="btn">
-            <input id="fileInput" type="file" accept="image/*">
-            Choose a Photo
-          </label>
-          <div class="hint">JPG/PNG • face visible works best • processed in your browser</div>
-          <div class="preview" id="preview"></div>
+      <div class="inline" style="margin-top:14px">
+        <button class="btn" id="matchBtn">Find Match</button>
+        <button class="btn secondary" id="resetBtn">Reset</button>
+        <label class="toggle" title="Use AI to generate a new hairstyle image">
+          <input type="checkbox" id="useAI" checked>
+          <span class="muted">Use AI 生成</span>
+        </label>
+      </div>
+
+      <div id="result" class="result" aria-live="polite">
+        <div class="match-top">
+          <span class="match-badge">Your Match</span>
+          <span id="matchTitle" style="font-weight:700">—</span>
+          <span class="muted" id="confidence"></span>
+          <span class="muted" id="aiNote" style="display:none">· AI generated</span>
         </div>
-
-        <div class="options" style="margin-top:14px">
-          <div class="opt-group">
-            <div class="muted" style="margin-bottom:8px">Length</div>
-            <div class="chips" data-name="length">
-              <span class="chip">Short</span>
-              <span class="chip">Medium</span>
-              <span class="chip">Long</span>
-            </div>
+        <div class="match-grid" style="margin-top:8px">
+          <div class="match-card">
+            <div class="muted" style="margin-bottom:6px">Your Photo</div>
+            <img id="yourPhoto" alt="Your photo preview">
           </div>
-          <div class="opt-group">
-            <div class="muted" style="margin-bottom:8px">Style</div>
-            <div class="chips" data-name="style">
-              <span class="chip">Professional</span>
-              <span class="chip">Trendy</span>
-              <span class="chip">Casual</span>
-            </div>
-          </div>
-          <div class="opt-group">
-            <div class="muted" style="margin-bottom:8px">Face Shape</div>
-            <div class="chips" data-name="shape">
-              <span class="chip">Oval</span>
-              <span class="chip">Round</span>
-              <span class="chip">Square</span>
-              <span class="chip">Heart</span>
-            </div>
-          </div>
-          <div class="opt-group">
-            <div class="muted" style="margin-bottom:8px">Occasion</div>
-            <div class="chips" data-name="occasion">
-              <span class="chip">Work</span>
-              <span class="chip">Date</span>
-              <span class="chip">Event</span>
-            </div>
+          <div class="match-card">
+            <div class="muted" style="margin-bottom:6px">Suggested Style</div>
+            <div id="styleSkeleton" class="skeleton" style="display:none"></div>
+            <img id="stylePhoto" alt="Suggested hairstyle" style="display:none">
+            <div style="margin-top:8px" class="muted" id="tags"></div>
           </div>
         </div>
-
-        <div class="inline-badges" style="margin-top:14px">
-          <button class="btn" id="matchBtn">Find Match</button>
-          <button class="btn secondary" id="resetBtn">Reset</button>
-          <span class="muted">Tips: choose a clear, front-facing photo for better suggestions.</span>
+        <div class="inline" style="margin-top:10px">
+          <button class="btn secondary" id="tryAnother">Try Another</button>
         </div>
-
-        <!-- Result -->
-        <div id="result" class="result" aria-live="polite">
-          <div class="match-top">
-            <span class="match-badge">Your Match</span>
-            <span class="match-title" id="matchTitle">—</span>
-            <span class="muted" id="confidence"></span>
-          </div>
-          <div class="match-grid" style="margin-top:8px">
-            <div class="match-card">
-              <div class="muted" style="margin-bottom:6px">Your Photo</div>
-              <img id="yourPhoto" alt="Your photo preview">
-            </div>
-            <div class="match-card">
-              <div class="muted" style="margin-bottom:6px">Suggested Style</div>
-              <img id="stylePhoto" alt="Suggested hairstyle">
-              <div style="margin-top:8px" class="muted" id="tags"></div>
-            </div>
-          </div>
-          <div class="cta-row" style="margin-top:10px">
-            <button class="btn secondary" id="tryAnother">Try Another</button>
-            <a class="btn" href="#gallery">Browse Gallery</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Right: Gallery / Info -->
-      <aside class="card" id="gallery">
-        <h2>Inspiration Gallery</h2>
-        <div class="gallery" id="galleryGrid" aria-live="polite">
-          <!-- Placeholder gallery tiles (no external images needed) -->
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <h3 style="margin:0 0 6px">How it works</h3>
-          <ol style="margin:8px 0 0 18px">
-            <li>We preview your uploaded image <em>locally</em> (no upload to servers).</li>
-            <li>You set preferences: length, style, face shape, occasion.</li>
-            <li>A lightweight heuristic picks a matching style from preset options.</li>
-          </ol>
-          <p class="muted" style="margin:10px 0 0">Want real AI matching? Replace the heuristic in <code>computeMatch()</code>
-          with your API or on-device model.</p>
-        </div>
-      </aside>
-    </div>
-
-    <section class="card" id="faq" style="margin-top:22px">
-      <h2>FAQ</h2>
-      <details><summary><strong>Is my photo uploaded to a server?</strong></summary>
-        <p class="muted">No. This demo runs entirely in your browser. Your image never leaves your device.</p>
-      </details>
-      <details><summary><strong>Why is the match simple?</strong></summary>
-        <p class="muted">It’s a fast, front-end demo. For production, integrate a model or API and return true matches.</p>
-      </details>
-      <details><summary><strong>How do I integrate a real model?</strong></summary>
-        <p class="muted">Hook your API in <code>computeMatch()</code>. Send the image (Base64 or URL) and user filters; render
-        the result when your API responds.</p>
-      </details>
+      </div>
     </section>
 
-    <footer>
-      © <span id="year"></span> Hairstyle Matcher · Built with <span class="heart">♥</span>
-    </footer>
+    <!-- 右侧：说明 -->
+    <aside class="card">
+      <h2>How it works</h2>
+      <ol style="margin:8px 0 0 18px">
+        <li>Preview happens <em>locally</em>.</li>
+        <li>Choose length, style, face shape, occasion.</li>
+        <li>点击“Find Match”，若开启 <strong>Use AI 生成</strong>，后端将基于你的照片 + 选项生成带新发型的图片。</li>
+      </ol>
+      <p class="muted" style="margin:10px 0 0">部署：GitHub Pages + 你的 Serverless/Workers 代理（隐藏 API Key）。</p>
+      <div style="margin-top:12px;padding:12px;border:1px dashed var(--border);border-radius:12px;background:#f7fbff">
+        <div class="muted"><strong>隐私提醒：</strong>启用 AI 生成时，你的图片会被发送到你配置的后端（Replicate 或你的本地 A1111）。</div>
+      </div>
+    </aside>
   </div>
 
+  <footer>© <span id="year"></span> Hairstyle Matcher</footer>
+</div>
+
 <script>
-  // ------- Utilities & State -------
+  // ======= 配置：把它改成你的 serverless/worker 地址 =======
+  const AI_BACKEND = 'replicate';    // 'replicate' | 'a1111' | 'openai'(占位)
+  const AI_BACKEND_ENDPOINT = 'https://YOUR_PROXY_DOMAIN/api/generate'; // 代理统一入口
+
+  // ======= 现有 UI 变量 =======
   const fileInput = document.getElementById('fileInput');
-  const dropzone = document.getElementById('dropzone');
-  const preview = document.getElementById('preview');
-  const matchBtn = document.getElementById('matchBtn');
-  const resetBtn = document.getElementById('resetBtn');
+  const dropzone  = document.getElementById('dropzone');
+  const preview   = document.getElementById('preview');
+  const matchBtn  = document.getElementById('matchBtn');
+  const resetBtn  = document.getElementById('resetBtn');
   const resultBox = document.getElementById('result');
   const yourPhoto = document.getElementById('yourPhoto');
-  const stylePhoto = document.getElementById('stylePhoto');
-  const matchTitle = document.getElementById('matchTitle');
-  const confidence = document.getElementById('confidence');
-  const tags = document.getElementById('tags');
-  const tryAnother = document.getElementById('tryAnother');
-  const galleryGrid = document.getElementById('galleryGrid');
+  const stylePhoto= document.getElementById('stylePhoto');
+  const styleSkeleton = document.getElementById('styleSkeleton');
+  const matchTitle= document.getElementById('matchTitle');
+  const confidence= document.getElementById('confidence');
+  const tags      = document.getElementById('tags');
+  const tryAnother= document.getElementById('tryAnother');
+  const useAI     = document.getElementById('useAI');
+  const aiNote    = document.getElementById('aiNote');
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Preset "styles" (using gradient placeholders to avoid external images)
-  const STYLE_DB = [
-    { id:'pro_short_fade',    name:'Clean Fade',         length:'Short',  style:'Professional', shape:['Oval','Square'],  occasion:['Work','Event'],    tile:'#b6d0ff,#e3edff' },
-    { id:'trend_medium_wave', name:'Textured Waves',     length:'Medium', style:'Trendy',       shape:['Oval','Heart'],   occasion:['Date','Event'],   tile:'#ffd2d2,#ffe8e8' },
-    { id:'casual_long_layer', name:'Layered Flow',       length:'Long',   style:'Casual',       shape:['Round','Oval'],   occasion:['Date','Casual'],  tile:'#ffe6b6,#fff2d9' },
-    { id:'pro_medium_part',   name:'Side Part Classic',  length:'Medium', style:'Professional', shape:['Square','Oval'],  occasion:['Work','Event'],    tile:'#c7f1d7,#e9fbf0' },
-    { id:'trend_short_quiff', name:'Modern Quiff',       length:'Short',  style:'Trendy',       shape:['Heart','Oval'],   occasion:['Event','Date'],    tile:'#f9d6ff,#fdeeff' },
-    { id:'casual_mid_shag',   name:'Relaxed Shag',       length:'Medium', style:'Casual',       shape:['Round','Heart'],  occasion:['Casual','Date'],   tile:'#f7f9ff,#ffffff' },
-  ];
-
-  // Build gallery
-  function buildGallery(){
-    galleryGrid.innerHTML = '';
-    STYLE_DB.forEach(s=>{
-      const el = document.createElement('div');
-      el.className = 'g-item';
-      el.innerHTML = `
-        <div class="ph" style="background:linear-gradient(135deg,${s.tile})">${s.name}</div>
-        <div class="meta">
-          <span class="tag">${s.length}</span>
-          <span class="tag">${s.style}</span>
-        </div>`;
-      galleryGrid.appendChild(el);
-    });
-  }
-  buildGallery();
-
-  // Chips (toggle active)
-  document.querySelectorAll('.chips').forEach(group=>{
-    group.addEventListener('click', (e)=>{
-      const chip = e.target.closest('.chip');
-      if(!chip) return;
-      // single-select behavior per group:
-      [...group.querySelectorAll('.chip')].forEach(c=>c.classList.remove('active'));
-      chip.classList.add('active');
-    });
+  // 拖拽上传
+  ['dragenter','dragover'].forEach(evt=>{
+    dropzone.addEventListener(evt, e=>{e.preventDefault();e.stopPropagation();dropzone.classList.add('dragover');});
   });
-
-  // Drag & Drop
-  ;['dragenter','dragover'].forEach(evt=>{
-    dropzone.addEventListener(evt, e=>{ e.preventDefault(); e.stopPropagation(); dropzone.classList.add('dragover'); });
-  });
-  ;['dragleave','drop'].forEach(evt=>{
-    dropzone.addEventListener(evt, e=>{ e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('dragover'); });
+  ['dragleave','drop'].forEach(evt=>{
+    dropzone.addEventListener(evt, e=>{e.preventDefault();e.stopPropagation();dropzone.classList.remove('dragover');});
   });
   dropzone.addEventListener('drop', e=>{
-    const f = e.dataTransfer.files && e.dataTransfer.files[0];
-    if(f) handleFile(f);
+    const f = e.dataTransfer.files?.[0]; if(f) handleFile(f);
   });
-
-  // File input
   fileInput.addEventListener('change', e=>{
-    const f = e.target.files && e.target.files[0];
-    if(f) handleFile(f);
+    const f = e.target.files?.[0]; if(f) handleFile(f);
   });
 
   function handleFile(file){
@@ -348,85 +209,116 @@
     reader.readAsDataURL(file);
   }
 
-  // Gather chosen filters
+  // 选项收集
   function getFilters(){
-    const out = {};
-    document.querySelectorAll('.chips').forEach(group=>{
-      const key = group.getAttribute('data-name');
-      const active = group.querySelector('.chip.active');
-      if(active) out[key] = active.textContent.trim();
+    const out={};
+    document.querySelectorAll('.chips').forEach(g=>{
+      const key=g.getAttribute('data-name');
+      const act=g.querySelector('.chip.active');
+      if(act) out[key]=act.textContent.trim();
     });
     return out;
   }
 
-  // Heuristic match (placeholder). Replace this with your API call later.
-  function computeMatch(filters){
-    // score each style by filter matches
-    const scored = STYLE_DB.map(s=>{
-      let score = 0;
-      if(filters.length && s.length === filters.length) score += 2;
-      if(filters.style && s.style === filters.style) score += 2;
-      if(filters.shape && s.shape.includes(filters.shape)) score += 1.5;
-      if(filters.occasion && s.occasion.includes(filters.occasion)) score += 1;
-      // tiny random to avoid ties
-      score += Math.random()*0.5;
-      return {s, score};
-    }).sort((a,b)=>b.score-a.score);
-
-    const top = scored[0];
-    const conf = Math.min(98, Math.round(70 + top.score*4)); // mock “confidence”
-    return { match: top.s, confidence: conf };
+  // 构造提示词（英文更利于通用模型）
+  function buildPrompt(filters){
+    const len = filters.length || 'Medium';
+    const sty = filters.style  || 'Professional';
+    const shp = filters.shape  || 'Oval';
+    const occ = filters.occasion || 'Work';
+    return `Add a ${len.toLowerCase()} ${sty.toLowerCase()} hairstyle suitable for ${occ.toLowerCase()} to this person with a ${shp.toLowerCase()} face. 
+keep the same face identity and lighting, natural realistic photo, high detail hair strands, cinematic, 8k portrait.`;
   }
 
-  // Match button
-  matchBtn.addEventListener('click', ()=>{
-    const imgExists = !!yourPhoto.src;
-    if(!imgExists){
-      dropzone.scrollIntoView({behavior:'smooth', block:'center'});
-      dropzone.classList.add('dragover');
-      setTimeout(()=>dropzone.classList.remove('dragover'), 800);
-      return;
-    }
+  // 假匹配名与“置信度”
+  function fakeMatchName(filters){
+    const map = {
+      Short: {Professional:'Clean Fade', Trendy:'Modern Quiff', Casual:'Messy Crop'},
+      Medium:{Professional:'Side Part Classic', Trendy:'Textured Waves', Casual:'Relaxed Shag'},
+      Long:  {Professional:'Layered Business', Trendy:'K-Pop Flow',    Casual:'Long Layers'}
+    };
+    const name = map[filters.length||'Medium']?.[filters.style||'Professional'] || 'Side Part Classic';
+    const conf = Math.round(90 + Math.random()*8);
+    return {name, conf};
+  }
+
+  matchBtn.addEventListener('click', async ()=>{
+    if(!yourPhoto.src){ dropzone.scrollIntoView({behavior:'smooth',block:'center'}); dropzone.classList.add('dragover'); setTimeout(()=>dropzone.classList.remove('dragover'),700); return;}
     const filters = getFilters();
-    const {match, confidence:conf} = computeMatch(filters);
-
-    matchTitle.textContent = match.name;
+    const {name, conf} = fakeMatchName(filters);
+    matchTitle.textContent = name;
     confidence.textContent = `· Confidence ~ ${conf}%`;
-    stylePhoto.src = makePlaceholder(match.tile);
-    tags.innerHTML = `#${match.length} #${match.style} ${
-      filters.shape?('#'+filters.shape):''} ${filters.occasion?('#'+filters.occasion):''}`;
-
+    tags.textContent = `#${filters.length||'Medium'} #${filters.style||'Professional'} ${filters.shape?('#'+filters.shape):''} ${filters.occasion?('#'+filters.occasion):''}`;
     resultBox.classList.add('show');
-    document.getElementById('result').scrollIntoView({behavior:'smooth', block:'nearest'});
+
+    // 占位/骨架
+    stylePhoto.style.display='none';
+    styleSkeleton.style.display='block';
+    aiNote.style.display = useAI.checked ? 'inline' : 'none';
+
+    if(useAI.checked){
+      try{
+        const url = await generateWithAI(yourPhoto.src, buildPrompt(filters));
+        stylePhoto.src = url;
+      }catch(err){
+        console.error(err);
+        alert('AI 生成失败：' + (err?.message||err));
+        // 回退占位色块
+        stylePhoto.src = makePlaceholder('#cfe8d6,#eaf7ef');
+      }
+    }else{
+      // 不启用AI时，用渐变占位
+      stylePhoto.src = makePlaceholder('#cfe8d6,#eaf7ef');
+    }
+
+    // 展示图片
+    styleSkeleton.style.display='none';
+    stylePhoto.style.display='block';
+    document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
   });
 
-  // Reset
   resetBtn.addEventListener('click', ()=>{
-    fileInput.value = '';
-    preview.innerHTML = '';
-    yourPhoto.removeAttribute('src');
-    resultBox.classList.remove('show');
-    document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+    fileInput.value=''; preview.innerHTML=''; yourPhoto.removeAttribute('src');
+    resultBox.classList.remove('show'); document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
   });
-  tryAnother.addEventListener('click', ()=>{ resultBox.classList.remove('show'); window.scrollTo({top:0, behavior:'smooth'}); });
+  tryAnother.addEventListener('click', ()=>{ resultBox.classList.remove('show'); window.scrollTo({top:0,behavior:'smooth'}); });
 
-  // Create a gradient placeholder as a data URL (no external images).
-  function makePlaceholder(grad){
-    const canvas = document.createElement('canvas');
-    canvas.width = 800; canvas.height = 1000; // 4:5
-    const ctx = canvas.getContext('2d');
-    const g = ctx.createLinearGradient(0,0,800,1000);
-    const stops = grad.split(',').map(s=>s.trim());
-    g.addColorStop(0, stops[0]);
-    g.addColorStop(1, stops[1] || stops[0]);
-    ctx.fillStyle = g; ctx.fillRect(0,0,800,1000);
-    // text label
-    ctx.fillStyle = 'rgba(0,0,0,.35)';
-    ctx.font = 'bold 44px system-ui, -apple-system, Segoe UI';
-    ctx.textAlign = 'center';
-    ctx.fillText('Suggested Style', 400, 520);
-    return canvas.toDataURL('image/png');
+  // 前端 -> 代理：把 dataURL + prompt 发给你的后端
+  async function generateWithAI(dataURL, prompt){
+    // dataURL 转纯 base64
+    const b64 = dataURL.split(',')[1];
+    const res = await fetch(AI_BACKEND_ENDPOINT, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: b64 })
+    });
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json(); // { image_url | image_base64 }
+    if(data.image_url)   return data.image_url;
+    if(data.image_base64) return 'data:image/png;base64,'+data.image_base64;
+    throw new Error('No image returned');
   }
+
+  // 简单占位图
+  function makePlaceholder(grad){
+    const [c1,c2]=grad.split(',');
+    const cvs=document.createElement('canvas'); cvs.width=800; cvs.height=1000;
+    const ctx=cvs.getContext('2d');
+    const g=ctx.createLinearGradient(0,0,800,1000); g.addColorStop(0,c1.trim()); g.addColorStop(1,(c2||c1).trim());
+    ctx.fillStyle=g; ctx.fillRect(0,0,800,1000);
+    ctx.fillStyle='rgba(0,0,0,.35)'; ctx.font='bold 44px system-ui,-apple-system,Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('AI Style (placeholder)', 400,520);
+    return cvs.toDataURL('image/png');
+  }
+
+  // 单选逻辑
+  document.querySelectorAll('.chips').forEach(group=>{
+    group.addEventListener('click', e=>{
+      const chip = e.target.closest('.chip'); if(!chip) return;
+      group.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
 </script>
 </body>
 </html>
