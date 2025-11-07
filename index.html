@@ -99,4 +99,334 @@
   .cta-row{display:flex; gap:10px; flex-wrap:wrap}
   .btn{
     display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px;
-    background:var(--primary); color:#
+    background:var(--primary); color:#fff; border:none; cursor:pointer; font-weight:600;
+    box-shadow:0 8px 18px rgba(43,108,176,.25);
+  }
+  .btn.secondary{background:#eef4ff; color:#274472}
+  .btn:active{transform:translateY(1px)}
+
+  /* Gallery */
+  .gallery{display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px}
+  @media (max-width:720px){ .gallery{grid-template-columns: repeat(2, minmax(0,1fr))} }
+  .g-item{border:1px solid var(--border); border-radius:12px; background:#fff; overflow:hidden}
+  .g-item .ph{
+    background:linear-gradient(135deg,#b8ccff 0%,#d9e5ff 100%);
+    height:160px; display:grid; place-items:center; color:#1f2f50; font-weight:800; letter-spacing:1px;
+  }
+  .g-item .meta{padding:10px; display:flex; align-items:center; justify-content:space-between}
+  .tag{font-size:12px; color:#274472; background:#eef4ff; border:1px solid #cfe0ff; border-radius:999px; padding:4px 8px}
+
+  /* Footer */
+  footer{margin:24px 0 6px; color:var(--muted); text-align:center}
+  .heart{display:inline-block; background:linear-gradient(45deg,#ff4d4d,#ff6ec7,#ffa94d,#ff4d4d); background-size:400% 400%;
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:beat 1.5s ease-in-out infinite,flow 6s ease infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}25%{transform:scale(1.25)}40%{transform:scale(1)}60%{transform:scale(1.25)}80%{transform:scale(1)}}
+  @keyframes flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <div class="logo">H</div>
+        <div>
+          <h1 style="margin:0 0 4px">Hairstyle Matcher</h1>
+          <div class="muted">Upload · Choose · Match — all in your browser</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#upload">Upload</a>
+        <a href="#result">Result</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </header>
+
+    <div class="grid">
+      <!-- Left: Upload & Options -->
+      <section class="card" id="upload">
+        <h2>1) Upload & Preferences</h2>
+        <div class="uploader" id="dropzone">
+          <p style="margin:0 0 10px"><strong>Drag & drop</strong> your photo here, or</p>
+          <label class="btn">
+            <input id="fileInput" type="file" accept="image/*">
+            Choose a Photo
+          </label>
+          <div class="hint">JPG/PNG • face visible works best • processed in your browser</div>
+          <div class="preview" id="preview"></div>
+        </div>
+
+        <div class="options" style="margin-top:14px">
+          <div class="opt-group">
+            <div class="muted" style="margin-bottom:8px">Length</div>
+            <div class="chips" data-name="length">
+              <span class="chip">Short</span>
+              <span class="chip">Medium</span>
+              <span class="chip">Long</span>
+            </div>
+          </div>
+          <div class="opt-group">
+            <div class="muted" style="margin-bottom:8px">Style</div>
+            <div class="chips" data-name="style">
+              <span class="chip">Professional</span>
+              <span class="chip">Trendy</span>
+              <span class="chip">Casual</span>
+            </div>
+          </div>
+          <div class="opt-group">
+            <div class="muted" style="margin-bottom:8px">Face Shape</div>
+            <div class="chips" data-name="shape">
+              <span class="chip">Oval</span>
+              <span class="chip">Round</span>
+              <span class="chip">Square</span>
+              <span class="chip">Heart</span>
+            </div>
+          </div>
+          <div class="opt-group">
+            <div class="muted" style="margin-bottom:8px">Occasion</div>
+            <div class="chips" data-name="occasion">
+              <span class="chip">Work</span>
+              <span class="chip">Date</span>
+              <span class="chip">Event</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="inline-badges" style="margin-top:14px">
+          <button class="btn" id="matchBtn">Find Match</button>
+          <button class="btn secondary" id="resetBtn">Reset</button>
+          <span class="muted">Tips: choose a clear, front-facing photo for better suggestions.</span>
+        </div>
+
+        <!-- Result -->
+        <div id="result" class="result" aria-live="polite">
+          <div class="match-top">
+            <span class="match-badge">Your Match</span>
+            <span class="match-title" id="matchTitle">—</span>
+            <span class="muted" id="confidence"></span>
+          </div>
+          <div class="match-grid" style="margin-top:8px">
+            <div class="match-card">
+              <div class="muted" style="margin-bottom:6px">Your Photo</div>
+              <img id="yourPhoto" alt="Your photo preview">
+            </div>
+            <div class="match-card">
+              <div class="muted" style="margin-bottom:6px">Suggested Style</div>
+              <img id="stylePhoto" alt="Suggested hairstyle">
+              <div style="margin-top:8px" class="muted" id="tags"></div>
+            </div>
+          </div>
+          <div class="cta-row" style="margin-top:10px">
+            <button class="btn secondary" id="tryAnother">Try Another</button>
+            <a class="btn" href="#gallery">Browse Gallery</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Gallery / Info -->
+      <aside class="card" id="gallery">
+        <h2>Inspiration Gallery</h2>
+        <div class="gallery" id="galleryGrid" aria-live="polite">
+          <!-- Placeholder gallery tiles (no external images needed) -->
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h3 style="margin:0 0 6px">How it works</h3>
+          <ol style="margin:8px 0 0 18px">
+            <li>We preview your uploaded image <em>locally</em> (no upload to servers).</li>
+            <li>You set preferences: length, style, face shape, occasion.</li>
+            <li>A lightweight heuristic picks a matching style from preset options.</li>
+          </ol>
+          <p class="muted" style="margin:10px 0 0">Want real AI matching? Replace the heuristic in <code>computeMatch()</code>
+          with your API or on-device model.</p>
+        </div>
+      </aside>
+    </div>
+
+    <section class="card" id="faq" style="margin-top:22px">
+      <h2>FAQ</h2>
+      <details><summary><strong>Is my photo uploaded to a server?</strong></summary>
+        <p class="muted">No. This demo runs entirely in your browser. Your image never leaves your device.</p>
+      </details>
+      <details><summary><strong>Why is the match simple?</strong></summary>
+        <p class="muted">It’s a fast, front-end demo. For production, integrate a model or API and return true matches.</p>
+      </details>
+      <details><summary><strong>How do I integrate a real model?</strong></summary>
+        <p class="muted">Hook your API in <code>computeMatch()</code>. Send the image (Base64 or URL) and user filters; render
+        the result when your API responds.</p>
+      </details>
+    </section>
+
+    <footer>
+      © <span id="year"></span> Hairstyle Matcher · Built with <span class="heart">♥</span>
+    </footer>
+  </div>
+
+<script>
+  // ------- Utilities & State -------
+  const fileInput = document.getElementById('fileInput');
+  const dropzone = document.getElementById('dropzone');
+  const preview = document.getElementById('preview');
+  const matchBtn = document.getElementById('matchBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const resultBox = document.getElementById('result');
+  const yourPhoto = document.getElementById('yourPhoto');
+  const stylePhoto = document.getElementById('stylePhoto');
+  const matchTitle = document.getElementById('matchTitle');
+  const confidence = document.getElementById('confidence');
+  const tags = document.getElementById('tags');
+  const tryAnother = document.getElementById('tryAnother');
+  const galleryGrid = document.getElementById('galleryGrid');
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Preset "styles" (using gradient placeholders to avoid external images)
+  const STYLE_DB = [
+    { id:'pro_short_fade',    name:'Clean Fade',         length:'Short',  style:'Professional', shape:['Oval','Square'],  occasion:['Work','Event'],    tile:'#b6d0ff,#e3edff' },
+    { id:'trend_medium_wave', name:'Textured Waves',     length:'Medium', style:'Trendy',       shape:['Oval','Heart'],   occasion:['Date','Event'],   tile:'#ffd2d2,#ffe8e8' },
+    { id:'casual_long_layer', name:'Layered Flow',       length:'Long',   style:'Casual',       shape:['Round','Oval'],   occasion:['Date','Casual'],  tile:'#ffe6b6,#fff2d9' },
+    { id:'pro_medium_part',   name:'Side Part Classic',  length:'Medium', style:'Professional', shape:['Square','Oval'],  occasion:['Work','Event'],    tile:'#c7f1d7,#e9fbf0' },
+    { id:'trend_short_quiff', name:'Modern Quiff',       length:'Short',  style:'Trendy',       shape:['Heart','Oval'],   occasion:['Event','Date'],    tile:'#f9d6ff,#fdeeff' },
+    { id:'casual_mid_shag',   name:'Relaxed Shag',       length:'Medium', style:'Casual',       shape:['Round','Heart'],  occasion:['Casual','Date'],   tile:'#f7f9ff,#ffffff' },
+  ];
+
+  // Build gallery
+  function buildGallery(){
+    galleryGrid.innerHTML = '';
+    STYLE_DB.forEach(s=>{
+      const el = document.createElement('div');
+      el.className = 'g-item';
+      el.innerHTML = `
+        <div class="ph" style="background:linear-gradient(135deg,${s.tile})">${s.name}</div>
+        <div class="meta">
+          <span class="tag">${s.length}</span>
+          <span class="tag">${s.style}</span>
+        </div>`;
+      galleryGrid.appendChild(el);
+    });
+  }
+  buildGallery();
+
+  // Chips (toggle active)
+  document.querySelectorAll('.chips').forEach(group=>{
+    group.addEventListener('click', (e)=>{
+      const chip = e.target.closest('.chip');
+      if(!chip) return;
+      // single-select behavior per group:
+      [...group.querySelectorAll('.chip')].forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+
+  // Drag & Drop
+  ;['dragenter','dragover'].forEach(evt=>{
+    dropzone.addEventListener(evt, e=>{ e.preventDefault(); e.stopPropagation(); dropzone.classList.add('dragover'); });
+  });
+  ;['dragleave','drop'].forEach(evt=>{
+    dropzone.addEventListener(evt, e=>{ e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('dragover'); });
+  });
+  dropzone.addEventListener('drop', e=>{
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if(f) handleFile(f);
+  });
+
+  // File input
+  fileInput.addEventListener('change', e=>{
+    const f = e.target.files && e.target.files[0];
+    if(f) handleFile(f);
+  });
+
+  function handleFile(file){
+    if(!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = e=>{
+      const url = e.target.result;
+      preview.innerHTML = `<img src="${url}" alt="preview">`;
+      yourPhoto.src = url;
+      resultBox.classList.remove('show');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Gather chosen filters
+  function getFilters(){
+    const out = {};
+    document.querySelectorAll('.chips').forEach(group=>{
+      const key = group.getAttribute('data-name');
+      const active = group.querySelector('.chip.active');
+      if(active) out[key] = active.textContent.trim();
+    });
+    return out;
+  }
+
+  // Heuristic match (placeholder). Replace this with your API call later.
+  function computeMatch(filters){
+    // score each style by filter matches
+    const scored = STYLE_DB.map(s=>{
+      let score = 0;
+      if(filters.length && s.length === filters.length) score += 2;
+      if(filters.style && s.style === filters.style) score += 2;
+      if(filters.shape && s.shape.includes(filters.shape)) score += 1.5;
+      if(filters.occasion && s.occasion.includes(filters.occasion)) score += 1;
+      // tiny random to avoid ties
+      score += Math.random()*0.5;
+      return {s, score};
+    }).sort((a,b)=>b.score-a.score);
+
+    const top = scored[0];
+    const conf = Math.min(98, Math.round(70 + top.score*4)); // mock “confidence”
+    return { match: top.s, confidence: conf };
+  }
+
+  // Match button
+  matchBtn.addEventListener('click', ()=>{
+    const imgExists = !!yourPhoto.src;
+    if(!imgExists){
+      dropzone.scrollIntoView({behavior:'smooth', block:'center'});
+      dropzone.classList.add('dragover');
+      setTimeout(()=>dropzone.classList.remove('dragover'), 800);
+      return;
+    }
+    const filters = getFilters();
+    const {match, confidence:conf} = computeMatch(filters);
+
+    matchTitle.textContent = match.name;
+    confidence.textContent = `· Confidence ~ ${conf}%`;
+    stylePhoto.src = makePlaceholder(match.tile);
+    tags.innerHTML = `#${match.length} #${match.style} ${
+      filters.shape?('#'+filters.shape):''} ${filters.occasion?('#'+filters.occasion):''}`;
+
+    resultBox.classList.add('show');
+    document.getElementById('result').scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+
+  // Reset
+  resetBtn.addEventListener('click', ()=>{
+    fileInput.value = '';
+    preview.innerHTML = '';
+    yourPhoto.removeAttribute('src');
+    resultBox.classList.remove('show');
+    document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+  });
+  tryAnother.addEventListener('click', ()=>{ resultBox.classList.remove('show'); window.scrollTo({top:0, behavior:'smooth'}); });
+
+  // Create a gradient placeholder as a data URL (no external images).
+  function makePlaceholder(grad){
+    const canvas = document.createElement('canvas');
+    canvas.width = 800; canvas.height = 1000; // 4:5
+    const ctx = canvas.getContext('2d');
+    const g = ctx.createLinearGradient(0,0,800,1000);
+    const stops = grad.split(',').map(s=>s.trim());
+    g.addColorStop(0, stops[0]);
+    g.addColorStop(1, stops[1] || stops[0]);
+    ctx.fillStyle = g; ctx.fillRect(0,0,800,1000);
+    // text label
+    ctx.fillStyle = 'rgba(0,0,0,.35)';
+    ctx.font = 'bold 44px system-ui, -apple-system, Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText('Suggested Style', 400, 520);
+    return canvas.toDataURL('image/png');
+  }
+</script>
+</body>
+</html>
