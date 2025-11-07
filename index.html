@@ -29,12 +29,9 @@
     .block{margin-bottom:18px}
     h2{font-size:18px;margin:0 0 10px} h3{font-size:16px;margin:0 0 4px}
     .muted{color:var(--muted)}
-    .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#0b1222;border:1px solid #334155;color:#cbd5e1;font-size:12px;margin:0 6px 6px 0}
-    .list{display:grid;gap:10px}
     .links-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .links-inline .sep{opacity:.6}
     .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #334155;border-radius:999px;color:#cbd5e1;background:#0b1222aa}
-    .contact a{color:#e5e7eb}
     footer{margin-top:24px;color:#94a3b8;text-align:center}
     @media (max-width:960px){.layout{grid-template-columns:1fr}.side{order:2}.main{order:1}}
   </style>
@@ -61,7 +58,7 @@
           <div class="sub">Data Scientist · Senior Business Analyst · Hong Kong Island</div>
         </div>
       </div>
-      <div class="contact panel" style="display:flex;gap:12px;align-items:center">
+      <div class="panel" style="display:flex;gap:12px;align-items:center">
         <span class="badge">IANG Visa Holder</span>
         <a href="mailto:Jaggerxlee@gmail.com">Jaggerxlee@gmail.com</a>
         <span>·</span>
@@ -73,23 +70,15 @@
       <!-- Sidebar -->
       <aside class="panel side">
         <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
-
-        <!-- Education moved to sidebar top -->
         <div class="block">
           <h2>Education</h2>
-          <div class="list">
-            <div>
-              <h3>HKU — MSc in Business Analytics (STEM)</h3>
-              <div class="muted">Aug 2022 – Dec 2023 · FinTech Club President</div>
-            </div>
-            <div>
-              <h3>HUST — BSc in Management (Public Administration)</h3>
-              <div class="muted">Sep 2013 – Jul 2017 · GPA 3.65/4.0 (Top 20%)</div>
-            </div>
+          <div>
+            <h3>HKU — MSc in Business Analytics (STEM)</h3>
+            <div class="muted">Aug 2022 – Dec 2023 · FinTech Club President</div>
+            <h3>HUST — BSc in Management (Public Administration)</h3>
+            <div class="muted">Sep 2013 – Jul 2017 · GPA 3.65/4.0 (Top 20%)</div>
           </div>
         </div>
-
-        <!-- Links in one line -->
         <div class="block">
           <h2>Links</h2>
           <div class="links-inline">
@@ -107,10 +96,10 @@
           <p>Data Scientist with strong Python & SQL foundation; experienced in designing ETL pipelines, building predictive models, and turning complex data into actionable insights. Comfortable bridging business and technical stakeholders. Hands-on with Databricks, Azure, Tableau, and Oracle Cloud across finance, investment research, and enterprise analytics scenarios.</p>
         </section>
 
-        <!-- INTERESTS & SKILLS moved here and replaced -->
+        <!-- INTERESTS & SKILLS -->
         <section class="panel">
           <h2>INTERESTS &amp; SKILLS</h2>
-          <ul>
+          <ul style="margin:0;padding-left:18px;line-height:1.8;">
             <li><strong>Programming Languages:</strong> Python, SQL, VBA</li>
             <li><strong>Data Analytics Tools:</strong> Databricks, Colab, Tableau, Excel, R Studio</li>
             <li><strong>Cloud &amp; Data Platforms:</strong> Azure, Oracle Cloud, Snowflake (familiarity), Databricks</li>
@@ -118,27 +107,42 @@
             <li><strong>Other:</strong> ETL Pipelines, Reporting Automation, BI Dashboarding, Cross-functional Communication</li>
           </ul>
         </section>
+
+        <!-- EDUCATION -->
         <section class="panel">
-  <h2>EDUCATION</h2>
-  <div class="list">
-    <div>
-      <h3>The University of Hong Kong <span class="muted" style="float:right;">Hong Kong</span></h3>
-      <div class="muted">Master of Science in Business Analytics (STEM Major) <span style="float:right;">2022.08 – 2023.12</span></div>
-      <ul style="margin-top:6px;margin-bottom:10px;">
-        <li>Honors: The Club President of FinTech Club of HKU Business School Masters Programme 2022–2023</li>
-        <li>Core Courses: Corporate Finance, Venture Capital and Private Equity, Operations Analytics</li>
-      </ul>
-    </div>
-    <div>
-      <h3>Huazhong University of Science and Technology <span class="muted" style="float:right;">Wuhan</span></h3>
-      <div class="muted">Bachelor of Management in Public Administration <span style="float:right;">2013.09 – 2017.07</span></div>
-      <ul style="margin-top:6px;">
-        <li>Honors: Academic Excellence Award (GPA: 3.65/4.0 · Top 20% in major of Public Administration)</li>
-        <li>Core Courses: Accounting and Financial Management, Macroeconomics, Politics</li>
-      </ul>
-    </div>
-  </div>
-</section>
+          <h2>EDUCATION</h2>
+          <div class="list" style="line-height:1.7;">
+            <div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <h3 style="margin:0;">The University of Hong Kong</h3>
+                <span class="muted">Hong Kong</span>
+              </div>
+              <div class="muted" style="display:flex;justify-content:space-between;">
+                <span>Master of Science in Business Analytics (STEM Major)</span>
+                <span>2022.08 – 2023.12</span>
+              </div>
+              <ul style="margin-top:6px;margin-bottom:10px;padding-left:18px;">
+                <li>Honors: The Club President of FinTech Club of HKU Business School Masters Programme 2022–2023</li>
+                <li>Core Courses: Corporate Finance, Venture Capital and Private Equity, Operations Analytics</li>
+              </ul>
+            </div>
+
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <h3 style="margin:0;">Huazhong University of Science and Technology</h3>
+                <span class="muted">Wuhan</span>
+              </div>
+              <div class="muted" style="display:flex;justify-content:space-between;">
+                <span>Bachelor of Management in Public Administration</span>
+                <span>2013.09 – 2017.07</span>
+              </div>
+              <ul style="margin-top:6px;padding-left:18px;">
+                <li>Honors: Academic Excellence Award (GPA: 3.65/4.0 · Top 20% in major of Public Administration)</li>
+                <li>Core Courses: Accounting and Financial Management, Macroeconomics, Politics</li>
+              </ul>
+            </div>
+          </div>
+        </section>
 
 
         <section class="panel">
