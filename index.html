@@ -21,6 +21,8 @@
       --text:#1f2937;
       --shadow:0 8px 20px rgba(16, 42, 87, 0.08);
       --link:#2b6cb0;
+      --sidew:320px;     /* 侧栏宽 */
+      --gap:22px;        /* 主体左右间距 */
     }
 
     /* ===== 深色主题 ===== */
@@ -52,25 +54,26 @@
 
     .wrap{max-width:1060px;margin:0 auto;padding:24px}
 
-    /* Header 改造 */
+    /* 顶部标题行 */
     header{
       display:flex;
       align-items:center;
       gap:16px;
-      margin-bottom:18px;
+      margin-bottom:10px; /* 留出下面对齐行的空间 */
     }
-    .brand{display:flex;align-items:center;gap:14px;flex:0 0 auto;}
+    .brand{display:flex;align-items:center;gap:14px;}
     .logo{width:46px;height:46px;border-radius:12px;background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800}
     .title h1{margin:0;font-size:30px;color:var(--text)}
     .title .sub{color:var(--muted)}
 
-    /* 新增：右侧整体自适应行 */
-    .header-right{
+    /* === 关键：联系栏与主栏左边缘对齐 === */
+    .contact-row{
       display:flex;
       align-items:center;
       gap:12px;
-      flex:1;
-      min-width:0;
+      margin-left:calc(var(--sidew) + var(--gap));
+      width:calc(100% - (var(--sidew) + var(--gap)));
+      margin-bottom:18px; /* 与下面面板的垂直节奏一致 */
     }
     .contact-bar{
       display:flex;
@@ -82,29 +85,20 @@
       background:var(--card);
       box-shadow:var(--shadow);
       flex:1;
+      min-width:0;
     }
-    .contact-bar .badge{white-space:nowrap;}
-    .contact-bar a{color:var(--link);}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--text);background:var(--panel);white-space:nowrap;}
     .theme-toggle{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background:var(--card);
-      box-shadow:var(--shadow);
-      cursor:pointer;
-      user-select:none;
-      font-weight:600;
-      color:var(--text);
-      white-space:nowrap;
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border:1px solid var(--border);border-radius:999px;
+      background:var(--card);box-shadow:var(--shadow);
+      cursor:pointer;user-select:none;font-weight:600;color:var(--text);white-space:nowrap;
     }
 
     /* 主体布局 */
-    .layout{display:flex;align-items:stretch;justify-content:space-between;gap:22px;min-height:calc(100vh - 200px);}
-    .side{flex:0 0 320px;display:flex;flex-direction:column;justify-content:space-between;text-align:justify;}
-    .main{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:18px;}
+    .layout{display:flex;align-items:stretch;justify-content:space-between;gap:var(--gap);min-height:calc(100vh - 200px);}
+    .side{flex:0 0 var(--sidew);display:flex;flex-direction:column;justify-content:space-between;text-align:justify;}
+    .main{flex:1;display:flex;flex-direction:column;gap:18px;}
     .panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
     .photo{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:16px;border:1px solid var(--border);box-shadow:var(--shadow)}
     .block{margin-bottom:18px}
@@ -113,7 +107,6 @@
     .muted{color:var(--muted)}
     .links-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .links-inline .sep{opacity:.5}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--text);background:var(--panel)}
     footer{margin-top:24px;color:var(--muted);text-align:center}
     p, li, div, span{text-align:justify;text-justify:inter-word;}
 
@@ -123,11 +116,17 @@
     @keyframes heartbeat{0%,100%{transform:scale(1);}25%{transform:scale(1.3);}40%{transform:scale(1);}60%{transform:scale(1.3);}80%{transform:scale(1);}}
     @keyframes gradientMove{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 
-    @media (max-width:960px){.layout{flex-direction:column}.side{flex:unset}}
+    /* 响应式 */
+    @media (max-width:960px){
+      :root{ --sidew:100%; }
+      .layout{flex-direction:column}
+      .contact-row{margin-left:0;width:100%;}
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
+    <!-- 顶部品牌 -->
     <header>
       <div class="brand">
         <div class="logo">J</div>
@@ -136,21 +135,23 @@
           <div class="sub">Data Scientist · Hong Kong</div>
         </div>
       </div>
-
-      <div class="header-right">
-        <div class="contact-bar">
-          <span class="badge">IANG Visa Holder</span>
-          <a href="mailto:Jaggerxlee@gmail.com">Jaggerxlee@gmail.com</a>
-          <span>·</span>
-          <a href="tel:+85255650353">+852-5565-0353</a>
-        </div>
-        <button id="themeBtn" class="theme-toggle" aria-label="Toggle theme">
-          🌙 <span id="themeText">Dark</span>
-        </button>
-      </div>
     </header>
 
+    <!-- 这行与主栏左边缘对齐 -->
+    <div class="contact-row">
+      <div class="contact-bar">
+        <span class="badge">IANG Visa Holder</span>
+        <a href="mailto:Jaggerxlee@gmail.com">Jaggerxlee@gmail.com</a>
+        <span>·</span>
+        <a href="tel:+85255650353">+852-5565-0353</a>
+      </div>
+      <button id="themeBtn" class="theme-toggle" aria-label="Toggle theme">
+        🌙 <span id="themeText">Dark</span>
+      </button>
+    </div>
+
     <div class="layout">
+      <!-- 左栏 -->
       <aside class="panel side">
         <div>
           <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
@@ -199,6 +200,7 @@
         </div>
       </aside>
 
+      <!-- 主栏 -->
       <main class="main">
         <section class="panel">
           <h2>Profile</h2>
@@ -256,7 +258,10 @@
   </div>
 
   <script>
+    // 年份
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    // 主题切换
     const root=document.documentElement,btn=document.getElementById('themeBtn'),text=document.getElementById('themeText');
     function applyTheme(t){
       root.setAttribute('data-theme',t);
