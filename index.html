@@ -3,27 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jagger Jie Li | Data Scientist · Senior Business Analyst</title>
+  <title>Jagger Jie Li | Data Scientist</title>
   <meta name="description" content="Portfolio of Jagger Jie Li — Data Scientist / Senior Business Analyst. Projects, experience, education, and contact." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%23000'/><text x='50' y='62' font-size='56' text-anchor='middle' fill='%23fff' font-family='Arial,sans-serif'>J</text></svg>">
   <style>
-    /* ===== 主题变量（默认：浅蓝） ===== */
+    /* ===== 默认浅蓝主题 ===== */
     :root{
-      --bg:#e6f0ff;         /* very light blue */
-      --bg2:#f0f7ff;        /* even lighter blue */
-      --bg3:#ffffff;        /* soft white */
+      --bg:#eaf3ff;
+      --bg2:#f6faff;
+      --bg3:#ffffff;
       --panel:rgba(255,255,255,0.88);
-      --muted:#5b6b87;      /* slate-ish text */
-      --primary:#2b6cb0;    /* blue */
-      --accent:#7aa8ff;     /* light blue accent */
+      --muted:#5b6b87;
+      --primary:#2b6cb0;
+      --accent:#7aa8ff;
       --border:#dbe3f0;
       --card:rgba(255,255,255,0.95);
-      --text:#1f2937;       /* main text */
+      --text:#1f2937;
       --shadow:0 8px 20px rgba(16, 42, 87, 0.08);
       --link:#2b6cb0;
     }
 
-    /* ===== 深色主题覆盖 ===== */
+    /* ===== 深色主题 ===== */
     html[data-theme="dark"]{
       --bg:#0f172a; --bg2:#0b1222; --bg3:#111827;
       --panel:#0b1222ee;
@@ -43,81 +43,83 @@
       margin:0;
       font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       color:var(--text);
-      background: radial-gradient(1000px 600px at -10% -10%, var(--bg3), transparent),
-                  radial-gradient(900px 600px at 110% 10%, var(--bg2), transparent),
-                  linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%);
-      background-attachment: fixed;
+      background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 50%,var(--bg3) 100%);
+      background-attachment:fixed;
     }
 
     a{color:var(--link);text-decoration:none}
     a:hover{text-decoration:underline}
 
     .wrap{max-width:1060px;margin:0 auto;padding:24px}
-    header{
-      display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px
-    }
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
     .brand{display:flex;align-items:center;gap:14px}
-    .logo{
-      width:46px;height:46px;border-radius:12px;
-      background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800
-    }
+    .logo{width:46px;height:46px;border-radius:12px;background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800}
     .title h1{margin:0;font-size:30px;color:var(--text)}
     .title .sub{color:var(--muted)}
+
+    /* === 布局等高 === */
+    .layout{
+      display:flex;
+      align-items:stretch;
+      justify-content:space-between;
+      gap:22px;
+      min-height:calc(100vh - 200px);
+    }
+    .side{
+      flex:0 0 320px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      text-align:justify;
+    }
+    .main{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:18px;
+    }
+
+    .panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+    .photo{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:16px;border:1px solid var(--border);box-shadow:var(--shadow)}
+    .block{margin-bottom:18px}
+    h2{font-size:18px;margin:0 0 10px;color:var(--text)}
+    h3{font-size:16px;margin:0 0 4px;color:var(--text)}
+    .muted{color:var(--muted)}
+    .links-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .links-inline .sep{opacity:.5}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--text);background:var(--panel)}
+    footer{margin-top:24px;color:var(--muted);text-align:center}
+
+    /* 全文两端对齐 */
+    p, li, div, span {text-align:justify;text-justify:inter-word;}
+
+    /* ❤️ 动态发光心 */
+    .heart {
+      display:inline-block;
+      background:linear-gradient(45deg,#ff4d4d,#ff6ec7,#ffa94d,#ff4d4d);
+      background-size:400% 400%;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      animation:heartbeat 1.5s ease-in-out infinite,gradientMove 6s ease infinite;
+      transform-origin:center;
+      transition:filter 0.3s ease;
+    }
+    .heart:hover{filter:drop-shadow(0 0 8px #ff99a5);}
+    @keyframes heartbeat{0%,100%{transform:scale(1);}25%{transform:scale(1.3);}40%{transform:scale(1);}60%{transform:scale(1.3);}80%{transform:scale(1);}}
+    @keyframes gradientMove{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 
     /* 主题切换按钮 */
     .theme-toggle{
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 12px;border:1px solid var(--border);border-radius:999px;
-      background:var(--card);box-shadow:var(--shadow);cursor:pointer;
-      user-select:none;font-weight:600;color:var(--text)
+      background:var(--card);box-shadow:var(--shadow);
+      cursor:pointer;user-select:none;font-weight:600;color:var(--text)
     }
 
-    /* 布局：两栏等高对齐 */
-    .layout{display:flex;align-items:stretch;gap:22px;min-height:480px}
-    .side{flex:0 0 320px;display:flex;flex-direction:column;text-align:justify}
-    .main{flex:1;display:flex;flex-direction:column;gap:18px}
-
-    .panel{
-      background:var(--card);border:1px solid var(--border);
-      border-radius:18px;padding:18px;box-shadow:var(--shadow)
-    }
-    .photo{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:16px;border:1px solid var(--border);box-shadow:var(--shadow)}
-    .block{margin-bottom:18px}
-    h2{font-size:18px;margin:0 0 10px;text-align:left;color:var(--text)}
-    h3{font-size:16px;margin:0 0 4px;text-align:left;color:var(--text)}
-    .muted{color:var(--muted)}
-    .links-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .links-inline .sep{opacity:.5}
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;padding:6px 10px;
-      border:1px solid var(--border);border-radius:999px;color:var(--text);
-      background:var(--panel)
-    }
-    footer{margin-top:24px;color:var(--muted);text-align:center}
-
-    /* 全文两端对齐 */
-    p, li, div, span { text-align: justify; text-justify: inter-word; }
-
-    /* ❤️ 渐变心跳 + hover发光 */
-    .heart {
-      display:inline-block;
-      background:linear-gradient(45deg, #ff4d4d, #ff6ec7, #ffa94d, #ff4d4d);
-      background-size:400% 400%;
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      animation: heartbeat 1.5s ease-in-out infinite, gradientMove 6s ease infinite;
-      transform-origin:center;
-      transition:filter 0.3s ease;
-    }
-    .heart:hover { filter: drop-shadow(0 0 8px #ff99a5); }
-    @keyframes heartbeat { 0%,100%{transform:scale(1);} 25%{transform:scale(1.3);} 40%{transform:scale(1);} 60%{transform:scale(1.3);} 80%{transform:scale(1);} }
-    @keyframes gradientMove { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
-
-    /* 移动端堆叠 */
     @media (max-width:960px){
       .layout{flex-direction:column}
       .side{flex:unset}
-      .theme-toggle{position:static}
     }
   </style>
 </head>
@@ -132,7 +134,6 @@
         </div>
       </div>
 
-      <!-- 右侧：联系 + 主题切换 -->
       <div style="display:flex;gap:12px;align-items:center">
         <div class="panel" style="display:flex;gap:10px;align-items:center">
           <span class="badge">IANG Visa Holder</span>
@@ -140,58 +141,58 @@
           <span>·</span>
           <a href="tel:+85255650353">+852-5565-0353</a>
         </div>
-        <button id="themeBtn" class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark">
+        <button id="themeBtn" class="theme-toggle" aria-label="Toggle theme">
           🌙 <span id="themeText">Dark</span>
         </button>
       </div>
     </header>
 
     <div class="layout">
-      <!-- Sidebar -->
+      <!-- 左栏 -->
       <aside class="panel side">
-        <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
+        <div>
+          <img class="photo" src="profile picture2.jpg" alt="Portrait of Jagger Jie Li" />
 
-        <div class="block">
-          <h2>Education</h2>
-          <div>
-            <h3>Master of Science<br>The University of Hong Kong<br>Business Analytics</h3>
-            <div class="muted">Aug 2022 – Dec 2023<br>FinTech Club President</div>
+          <div class="block">
+            <h2>Education</h2>
+            <div>
+              <h3>Master of Science<br>The University of Hong Kong<br>Business Analytics</h3>
+              <div class="muted">Aug 2022 – Dec 2023<br>FinTech Club President</div>
 
-            <h3>Bachelor of Management<br>Huazhong University of Science and Technology<br>Public Administration</h3>
-            <div class="muted">Sep 2013 – Jul 2017<br>Academic Excellence Award<br>GPA 3.65/4.0 (Top 20%)</div>
+              <h3>Bachelor of Management<br>Huazhong University of Science and Technology<br>Public Administration</h3>
+              <div class="muted">Sep 2013 – Jul 2017<br>Academic Excellence Award<br>GPA 3.65/4.0 (Top 20%)</div>
+            </div>
+          </div>
+
+          <div class="block">
+            <h2>Publications</h2>
+            <ul style="margin:0;padding-left:18px;line-height:1.6;">
+              <li>
+                DHgate.com’ Project:
+                <a href="https://github.com/JaggerNi/docs/blob/main/TikTok_SOP.pdf" target="_blank" rel="noopener">
+                  Standard Operating Procedure for TikTok Live-Streaming E-commerce in the U.S. Region
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="block">
+            <h2>Selected Projects</h2>
+            <ul style="margin:0;padding-left:18px;line-height:1.6;">
+              <li>
+                <strong>Urban AQI Forecasting (Thailand)</strong><br>
+                Engineered weather & pollution features and ensemble learning to lift recall on high-pollution days.<br>
+                <span class="muted">XGBoost · SHAP · Deployment</span>
+              </li>
+              <li>
+                <strong>FinTech Index & Retail Growth (Banking)</strong><br>
+                Panel of 20 banks (2015–2024); quantified elasticities of IT investment, DAU & app downloads to revenue.<br>
+                <span class="muted">Panel Data · 2SLS / DID</span>
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div class="block">
-          <h2>Publications</h2>
-          <ul style="margin:0;padding-left:18px;line-height:1.6;">
-            <li>
-              DHgate.com’ Project:
-              <a href="https://github.com/JaggerNi/docs/blob/main/TikTok_SOP.pdf" target="_blank" rel="noopener">
-                Standard Operating Procedure for TikTok Live-Streaming E-commerce in the U.S. Region
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Selected Projects 移到左侧并对齐 -->
-        <div class="block">
-          <h2>Selected Projects</h2>
-          <ul style="margin:0;padding-left:18px;line-height:1.6;">
-            <li>
-              <strong>Urban AQI Forecasting (Thailand)</strong><br>
-              Engineered weather & pollution features and ensemble learning to lift recall on high-pollution days.<br>
-              <span class="muted">XGBoost · SHAP · Deployment</span>
-            </li>
-            <li>
-              <strong>FinTech Index & Retail Growth (Banking)</strong><br>
-              Panel of 20 banks (2015–2024); quantified elasticities of IT investment, DAU & app downloads to revenue.<br>
-              <span class="muted">Panel Data · 2SLS / DID</span>
-            </li>
-          </ul>
-        </div>
-
-        <!-- 链接固定在左栏底部，保证两栏底部齐平 -->
         <div class="block" style="margin-top:auto;">
           <h2>Links</h2>
           <div class="links-inline">
@@ -202,14 +203,14 @@
         </div>
       </aside>
 
-      <!-- Main -->
+      <!-- 主栏 -->
       <main class="main">
-        <section class="panel" style="flex:0 0 auto;">
+        <section class="panel">
           <h2>Profile</h2>
           <p>Data Scientist with strong Python & SQL foundation; experienced in designing ETL pipelines, building predictive models, and turning complex data into actionable insights. Comfortable bridging business and technical stakeholders. Hands-on with Databricks, Azure, Tableau, and Oracle Cloud across finance, investment research, and enterprise analytics scenarios.</p>
         </section>
 
-        <section class="panel" style="flex:0 0 auto;">
+        <section class="panel">
           <h2>INTERESTS &amp; SKILLS</h2>
           <ul style="margin:0;padding-left:18px;line-height:1.8;">
             <li><strong>Programming Languages:</strong> Python, SQL, VBA</li>
@@ -220,9 +221,9 @@
           </ul>
         </section>
 
-        <section class="panel" style="flex:1 1 auto; display:flex; flex-direction:column;">
+        <section class="panel" style="flex:1 1 auto;display:flex;flex-direction:column;">
           <h2>Experience</h2>
-          <div style="display:grid; gap:14px;">
+          <div style="display:grid;gap:14px;">
             <div>
               <h3>Freelancer — Data Scientist / Senior Business Analyst</h3>
               <div class="muted">Jun 2019 – Present · Hong Kong (Remote/Consulting)</div>
@@ -250,7 +251,6 @@
               </ul>
             </div>
           </div>
-          <!-- 占位块让主栏底部与侧栏底部齐平（当主栏内容不足时） -->
           <div style="margin-top:auto;"></div>
         </section>
       </main>
@@ -262,29 +262,11 @@
   </div>
 
   <script>
-    // 年份
     document.getElementById('y').textContent = new Date().getFullYear();
-
-    // 主题切换：读写本地存储
-    const root = document.documentElement;
-    const btn  = document.getElementById('themeBtn');
-    const text = document.getElementById('themeText');
-
-    function applyTheme(t){
-      root.setAttribute('data-theme', t);
-      if(t === 'dark'){ btn.firstChild.textContent = '☀️ '; text.textContent = 'Light'; }
-      else { btn.firstChild.textContent = '🌙 '; text.textContent = 'Dark'; }
-      localStorage.setItem('theme', t);
-    }
-
-    // 初始化
-    const saved = localStorage.getItem('theme');
-    if(saved){ applyTheme(saved); }
-
-    btn.addEventListener('click', () => {
-      const current = root.getAttribute('data-theme') || 'light';
-      applyTheme(current === 'light' ? 'dark' : 'light');
-    });
+    const root=document.documentElement,btn=document.getElementById('themeBtn'),text=document.getElementById('themeText');
+    function applyTheme(t){root.setAttribute('data-theme',t);if(t==='dark'){btn.firstChild.textContent='☀️ ';text.textContent='Light';}else{btn.firstChild.textContent='🌙 ';text.textContent='Dark';}localStorage.setItem('theme',t);}
+    const saved=localStorage.getItem('theme');if(saved){applyTheme(saved);}
+    btn.addEventListener('click',()=>{const cur=root.getAttribute('data-theme')||'light';applyTheme(cur==='light'?'dark':'light');});
   </script>
 </body>
 </html>
