@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hairstyle Matcher | AI Powered</title>
-<meta name="description" content="Upload a photo, choose your preferences, and get an AI-generated hairstyle suggestion.">
+<title>Hairstyle Matcher | AI Powered (WebGPU 本地运行)</title>
+<meta name="description" content="Upload a photo, choose your preferences, and get an AI-generated hairstyle suggestion — runs fully in your browser with WebGPU.">
 <style>
   :root{
     --bg:#eef5ff; --bg2:#f8fbff; --card:#fff; --muted:#6b7280; --text:#1f2937;
@@ -48,6 +48,9 @@
   .toggle input:checked{background:#2b6cb0}
   .toggle input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
   .toggle input:checked::after{left:21px}
+  .loader{display:none;align-items:center;gap:8px;font-size:14px;color:#274472}
+  .loader.spin::before{content:"";width:14px;height:14px;border-radius:50%;border:3px solid #cfe0ff;border-top-color:#2b6cb0;display:inline-block;animation:rot .9s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
   footer{margin:24px 0 6px;color:var(--muted);text-align:center}
 </style>
 </head>
@@ -58,7 +61,7 @@
       <div class="logo">H</div>
       <div>
         <h1 style="margin:0 0 4px">Hairstyle Matcher</h1>
-        <div class="muted">Upload · Choose · <strong>AI Generate</strong></div>
+        <div class="muted">Upload · Choose · <strong>AI Generate (WebGPU)</strong></div>
       </div>
     </div>
     <nav><a href="#upload">Upload</a><a href="#result">Result</a></nav>
@@ -71,7 +74,10 @@
       <div class="uploader" id="dropzone">
         <p style="margin:0 0 10px"><strong>Drag & drop</strong> your photo here, or</p>
         <label class="btn"><input id="fileInput" type="file" accept="image/*"> Choose a Photo</label>
-        <div class="muted" style="font-size:13px;margin-top:6px">Processed locally · Your image isn’t uploaded unless AI is enabled</div>
+        <div class="muted" style="font-size:13px;margin-top:6px">
+          所有图片格式（JPG/PNG/WebP/AVIF…）均可。<br>
+          首次加载会下载模型（较大），请耐心等候一次，后续走缓存。
+        </div>
         <div class="preview" id="preview"></div>
       </div>
 
@@ -97,9 +103,7 @@
       <div class="inline" style="margin-top:14px">
         <button class="btn" id="matchBtn">Find Match</button>
         <button class="btn secondary" id="resetBtn">Reset</button>
-        <label class="toggle" title="Use AI to generate a new hairstyle image">
-          <input type="checkbox" id="useAI" checked><span class="muted">Use AI 生成</span>
-        </label>
+        <div class="loader" id="loader"><span class="spin"></span><span id="loadText">Loading model… 首次加载可能较慢</span></div>
       </div>
 
       <div id="result" class="result" aria-live="polite">
@@ -107,7 +111,7 @@
           <span class="match-badge">Your Match</span>
           <span id="matchTitle" style="font-weight:700">—</span>
           <span class="muted" id="confidence"></span>
-          <span class="muted" id="aiNote" style="display:none">· AI generated</span>
+          <span class="muted" id="aiNote" style="display:none">· Generated locally</span>
         </div>
         <div class="match-grid" style="margin-top:8px">
           <div class="match-card"><div class="muted" style="margin-bottom:6px">Your Photo</div><img id="yourPhoto" alt="Your photo"></div>
@@ -126,30 +130,58 @@
     <aside class="card">
       <h2>How it works</h2>
       <ol style="margin:8px 0 0 18px">
-        <li>Preview happens <em>locally</em>.</li>
-        <li>Choose length, style, face shape, occasion.</li>
-        <li>点击“Find Match”，若开启 <strong>Use AI 生成</strong>，后端将基于你的照片 + 选项生成带新发型的图片。</li>
+        <li>Everything runs <em>in your browser</em> with WebGPU/WASM（无后端、无限点击）。</li>
+        <li>Upload → choose options → click “Find Match”.</li>
+        <li>首次会下载模型分片（缓存到 IndexedDB）。</li>
       </ol>
-      <p class="muted" style="margin:10px 0 0">部署：GitHub Pages + Cloudflare Workers 代理（隐藏 API Key）。</p>
-      <div style="margin-top:12px;padding:12px;border:1px dashed var(--border);border-radius:12px;background:#f7fbff">
-        <div class="muted"><strong>隐私提醒：</strong>启用 AI 生成时，你的图片会被发送到你配置的后端（Replicate 或你的本地 A1111）。</div>
-      </div>
+      <p class="muted" style="margin:10px 0 0">提示：若设备不支持 WebGPU，会自动回退到 WASM（更慢）。</p>
     </aside>
   </div>
 
-  <footer>© <span id="year"></span> Hairstyle Matcher</footer>
+  <footer>© <span id="year"></span> Hairstyle Matcher · Local AI</footer>
 </div>
 
-<script>
-  /* ====== 配置：改成你的 Worker 域名 ====== */
-  const AI_BACKEND_ENDPOINT = 'https://api.jaggerli.com'; // 或 https://haircut.lijie625.workers.dev
-  const AI_BACKEND = 'replicate';
-  const REQUEST_TIMEOUT_MS = 65000;
-  const POLL_INTERVAL_MS   = 1200;
-  const FAST_RETRY_MAX_W   = 768;
+<!-- ========= 本地推理：Transformers.js / WebGPU ========= -->
+<script type="module">
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  /* ====== 元素 ====== */
+  // ============ 引入 transformers.js 并准备管线 ============
+  import { pipeline, env } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@3.0.0";
+
+  // 缓存到 IndexedDB，减轻二次加载
+  env.cacheDir = 'indexeddb://transformers';
+  // onnxruntime web 依赖（自动选择 wasm/webgpu）
+  env.backends.onnx.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.0/dist/";
+  env.allowRemoteModels = true;
+
+  const loader = document.getElementById('loader');
+  const loadText = document.getElementById('loadText');
+
+  // 检查 WebGPU 支持（不支持也能跑 WASM）
+  if (!('gpu' in navigator)) {
+    loader.style.display = 'flex';
+    loadText.textContent = '未检测到 WebGPU，将回退到较慢的 WebAssembly 模式';
+  }
+
+  // 预加载模型管线（sd-turbo：更快的图生图）
+  loader.style.display = 'flex';
+  loadText.textContent = 'Loading Stable Diffusion Turbo… 首次加载较慢，仅需一次';
+  window.__pipelinesReady = (async () => {
+    try {
+      window.img2img = await pipeline(
+        "image-to-image",
+        "Xenova/stable-diffusion-turbo",   // 可换 "Xenova/stable-diffusion-1.5"
+        { quantized: true }
+      );
+      loadText.textContent = 'Model ready ✓';
+      setTimeout(()=> loader.style.display='none', 600);
+    } catch (e) {
+      loadText.textContent = '模型加载失败：' + e?.message;
+      console.error(e);
+    }
+  })();
+
+  // ============ DOM 元素 ============
   const fileInput = document.getElementById('fileInput');
   const dropzone  = document.getElementById('dropzone');
   const preview   = document.getElementById('preview');
@@ -163,29 +195,60 @@
   const confidence= document.getElementById('confidence');
   const tags      = document.getElementById('tags');
   const tryAnother= document.getElementById('tryAnother');
-  const useAI     = document.getElementById('useAI');
   const aiNote    = document.getElementById('aiNote');
 
-  /* ====== 把任意可解码图片 → PNG（统一发送） ====== */
-  async function downscaleDataURL(dataURL, maxW=1280, maxH=1280, quality=0.92){
-    return new Promise((resolve, reject)=>{
-      const img = new Image();
-      img.onload = ()=>{
-        const r = Math.min(maxW / img.width, maxH / img.height, 1);
-        const w = Math.round(img.width * r), h = Math.round(img.height * r);
-        const c = document.createElement('canvas'); c.width = w; c.height = h;
-        const ctx = c.getContext('2d');
-        ctx.clearRect(0,0,w,h);
-        ctx.drawImage(img, 0, 0, w, h);
-        const out = c.toDataURL('image/png', quality); // 统一 PNG
-        resolve(out);
-      };
-      img.onerror = ()=>reject(new Error('此图片格式浏览器无法解码，请改用 JPG/PNG/WEBP/AVIF'));
-      img.src = dataURL;
-    });
+  // ============ 工具函数 ============
+  async function dataURLToImageBitmap(dataURL){
+    const blob = await (await fetch(dataURL)).blob();
+    return await createImageBitmap(blob);
+  }
+  function bitmapToCanvas(imgBitmap, target=768){
+    const r = Math.min(target / imgBitmap.width, target / imgBitmap.height, 1);
+    const w = Math.round(imgBitmap.width * r), h = Math.round(imgBitmap.height * r);
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0,0,w,h); ctx.drawImage(imgBitmap, 0, 0, w, h);
+    return c;
+  }
+  function makePlaceholder(grad='#cfe8d6,#eaf7ef'){
+    const [c1,c2]=grad.split(',');
+    const cvs=document.createElement('canvas'); cvs.width=800; cvs.height=1000;
+    const ctx=cvs.getContext('2d');
+    const g=ctx.createLinearGradient(0,0,800,1000); g.addColorStop(0,c1.trim()); g.addColorStop(1,(c2||c1).trim());
+    ctx.fillStyle=g; ctx.fillRect(0,0,800,1000);
+    ctx.fillStyle='rgba(0,0,0,.35)'; ctx.font='bold 44px system-ui,-apple-system,Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('AI Style (local placeholder)', 400,520);
+    return cvs.toDataURL('image/png');
   }
 
-  /* ====== 拖拽上传 ====== */
+  // 选项收集 + prompt
+  function getFilters(){
+    const out={};
+    document.querySelectorAll('.chips').forEach(g=>{
+      const key=g.getAttribute('data-name');
+      const act=g.querySelector('.chip.active');
+      if(act) out[key]=act.textContent.trim();
+    });
+    return out;
+  }
+  function buildPrompt(f){
+    const len = f.length || 'Medium';
+    const sty = f.style  || 'Professional';
+    const shp = f.shape  || 'Oval';
+    const occ = f.occasion || 'Work';
+    // 尽量简洁明确，有助 Turbo 收敛
+    return `short: ${len.toLowerCase()} | style: ${sty.toLowerCase()} | for ${occ.toLowerCase()} | ${shp.toLowerCase()} face. clean fade, neat side part, natural color, realistic photo, detailed hair strands`;
+  }
+  function fakeMatchName(f){
+    const map={Short:{Professional:'Clean Fade',Trendy:'Modern Quiff',Casual:'Messy Crop'},
+               Medium:{Professional:'Side Part Classic',Trendy:'Textured Waves',Casual:'Relaxed Shag'},
+               Long:{Professional:'Layered Business',Trendy:'K-Pop Flow',Casual:'Long Layers'}};
+    const name = map[f.length||'Medium']?.[f.style||'Professional'] || 'Side Part Classic';
+    const conf = Math.round(90 + Math.random()*8);
+    return {name, conf};
+  }
+
+  // ============ 上传/拖拽 ============
   ['dragenter','dragover'].forEach(evt=>{
     dropzone.addEventListener(evt, e=>{e.preventDefault();e.stopPropagation();dropzone.classList.add('dragover');});
   });
@@ -207,49 +270,34 @@
     reader.readAsDataURL(file);
   }
 
-  /* ====== 选项 & Prompt ====== */
-  function getFilters(){
-    const out={};
-    document.querySelectorAll('.chips').forEach(g=>{
-      const key=g.getAttribute('data-name');
-      const act=g.querySelector('.chip.active');
-      if(act) out[key]=act.textContent.trim();
+  // ============ 本地生成主流程 ============
+  async function generateWithAI_Local(dataURL, prompt){
+    await window.__pipelinesReady; // 确保模型已就绪
+    const t0 = performance.now();
+    const img = await dataURLToImageBitmap(dataURL);
+    const initCanvas = bitmapToCanvas(img, 768);
+
+    // sd-turbo 建议低 guidance + 少步数
+    const result = await window.img2img({
+      image: initCanvas,
+      prompt,
+      strength: 0.6,              // 越小越贴近原图（发型变化更少）
+      guidance_scale: 2.0,        // 低一些更快收敛
+      num_inference_steps: 4      // 1~4 步足够快
     });
-    return out;
-  }
-  function buildPrompt(f){
-    const len = f.length || 'Medium';
-    const sty = f.style  || 'Professional';
-    const shp = f.shape  || 'Oval';
-    const occ = f.occasion || 'Work';
-    return `Add a ${len.toLowerCase()} ${sty.toLowerCase()} hairstyle suitable for ${occ.toLowerCase()} to this person with a ${shp.toLowerCase()} face. keep the same face identity and lighting, natural realistic photo, high detail hair strands, cinematic, 8k portrait.`;
-  }
-  function fakeMatchName(f){
-    const map={Short:{Professional:'Clean Fade',Trendy:'Modern Quiff',Casual:'Messy Crop'},
-               Medium:{Professional:'Side Part Classic',Trendy:'Textured Waves',Casual:'Relaxed Shag'},
-               Long:{Professional:'Layered Business',Trendy:'K-Pop Flow',Casual:'Long Layers'}};
-    const name = map[f.length||'Medium']?.[f.style||'Professional'] || 'Side Part Classic';
-    const conf = Math.round(90 + Math.random()*8);
-    return {name, conf};
+
+    const outCanvas = result.images?.[0]; // HTMLCanvasElement
+    const sec = ((performance.now()-t0)/1000).toFixed(1);
+    return { dataURL: outCanvas.toDataURL('image/png'), seconds: sec };
   }
 
-  /* ====== 单选逻辑 ====== */
-  document.querySelectorAll('.chips').forEach(group=>{
-    group.addEventListener('click', e=>{
-      const chip=e.target.closest('.chip'); if(!chip) return;
-      group.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-      chip.classList.add('active');
-    });
-  });
-
-  /* ====== 主流程：创建 + 轮询（带压缩 & 降级重试） ====== */
+  // ============ 交互 ============
   matchBtn.addEventListener('click', async ()=>{
     if(!yourPhoto.src){
       dropzone.scrollIntoView({behavior:'smooth',block:'center'});
       dropzone.classList.add('dragover'); setTimeout(()=>dropzone.classList.remove('dragover'),700);
       return;
     }
-    const t0 = performance.now();
     const filters = getFilters();
     const {name, conf} = fakeMatchName(filters);
     matchTitle.textContent = name;
@@ -259,26 +307,20 @@
 
     stylePhoto.style.display='none';
     styleSkeleton.style.display='block';
-    aiNote.style.display = useAI.checked ? 'inline' : 'none';
+    aiNote.style.display = 'inline';
 
     try{
-      let url;
-      if(useAI.checked){
-        url = await generateWithAI(yourPhoto.src, buildPrompt(filters), 1280, 0.92);
-      }else{
-        url = makePlaceholder('#cfe8d6,#eaf7ef');
-      }
-      stylePhoto.src = url;
+      const { dataURL, seconds } = await generateWithAI_Local(yourPhoto.src, buildPrompt(filters));
+      stylePhoto.src = dataURL;
+      confidence.textContent += ` · ${seconds}s`;
     }catch(err){
       console.error(err);
-      alert('AI 生成失败：' + (err?.message||err));
-      stylePhoto.src = makePlaceholder('#cfe8d6,#eaf7ef');
+      alert('本地生成失败：' + (err?.message||err));
+      stylePhoto.src = makePlaceholder();
     }finally{
       styleSkeleton.style.display='none';
       stylePhoto.style.display='block';
       document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
-      const sec=((performance.now()-t0)/1000).toFixed(1);
-      confidence.textContent += ` · ${sec}s`;
     }
   });
 
@@ -286,65 +328,20 @@
     fileInput.value=''; preview.innerHTML=''; yourPhoto.removeAttribute('src');
     resultBox.classList.remove('show'); document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
   });
-  tryAnother.addEventListener('click', ()=>{ resultBox.classList.remove('show'); window.scrollTo({top:0,behavior:'smooth'}); });
 
-  /* ====== 与 Worker 交互 ====== */
-  async function generateWithAI(dataURL, prompt, maxSide=1280, quality=0.92){
-    // 第一次压缩（统一 PNG）——改1：直接传完整 dataURL
-    const small = await downscaleDataURL(dataURL, maxSide, maxSide, quality);
+  tryAnother.addEventListener('click', ()=>{
+    resultBox.classList.remove('show');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
 
-    let create = await safeFetch(`${AI_BACKEND_ENDPOINT}/create`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: small })
+  // 单选逻辑
+  document.querySelectorAll('.chips').forEach(group=>{
+    group.addEventListener('click', e=>{
+      const chip=e.target.closest('.chip'); if(!chip) return;
+      group.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
     });
-
-    // 创建失败则降级一轮再试 ——改2：降级也传完整 dataURL
-    if(!create.ok){
-      const smaller = await downscaleDataURL(dataURL, FAST_RETRY_MAX_W, FAST_RETRY_MAX_W, 0.9);
-      create = await safeFetch(`${AI_BACKEND_ENDPOINT}/create`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: smaller })
-      });
-    }
-    if(!create.ok) throw new Error("create: " + (await create.text().catch(()=>create.statusText)));
-    const cj = await create.json();
-    if(!cj.id) throw new Error("create: no id");
-
-    // 轮询
-    const start = Date.now();
-    while(true){
-      const r = await safeFetch(`${AI_BACKEND_ENDPOINT}/status/${cj.id}`);
-      if(!r.ok) throw new Error("status: " + (await r.text().catch(()=>r.statusText)));
-      const s = await r.json();
-      if(s.status === 'succeeded'){
-        if(s.image_url) return s.image_url;
-        throw new Error("status: no image_url");
-      }
-      if(Date.now() - start > REQUEST_TIMEOUT_MS) throw new Error("timeout");
-      await new Promise(res=>setTimeout(res, POLL_INTERVAL_MS));
-    }
-  }
-
-  // fetch 包装（更友好的失败信息）
-  async function safeFetch(url, opts){
-    try{
-      return await fetch(url, opts);
-    }catch(e){
-      throw new Error('Failed to fetch');
-    }
-  }
-
-  /* ====== 简单占位图 ====== */
-  function makePlaceholder(grad){
-    const [c1,c2]=grad.split(',');
-    const cvs=document.createElement('canvas'); cvs.width=800; cvs.height=1000;
-    const ctx=cvs.getContext('2d');
-    const g=ctx.createLinearGradient(0,0,800,1000); g.addColorStop(0,c1.trim()); g.addColorStop(1,(c2||c1).trim());
-    ctx.fillStyle=g; ctx.fillRect(0,0,800,1000);
-    ctx.fillStyle='rgba(0,0,0,.35)'; ctx.font='bold 44px system-ui,-apple-system,Segoe UI'; ctx.textAlign='center';
-    ctx.fillText('AI Style (placeholder)', 400,520);
-    return cvs.toDataURL('image/png');
-  }
+  });
 </script>
 </body>
 </html>
