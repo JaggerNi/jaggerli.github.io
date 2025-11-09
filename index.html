@@ -4,39 +4,41 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Hairstyle Matcher | AI Powered</title>
-<meta name="description" content="Upload a photo, choose preferences, and get an AI-generated hairstyle suggestion.">
+<meta name="description" content="Upload a photo, choose your preferences, and get an AI-generated hairstyle suggestion.">
 <style>
   :root{
     --bg:#eef5ff; --bg2:#f8fbff; --card:#fff; --muted:#6b7280; --text:#1f2937;
-    --primary:#2b6cb0; --border:#dbe3f0; --shadow:0 16px 40px rgba(16,42,87,.12); --radius:18px;
+    --primary:#2b6cb0; --accent:#7aa8ff; --border:#dbe3f0; --shadow:0 16px 40px rgba(16,42,87,.12);
+    --ring:0 0 0 8px rgba(43,108,176,.12); --radius:18px;
   }
   *{box-sizing:border-box} html,body{height:100%}
   body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--text);
     background: radial-gradient(1200px 600px at -10% -10%, rgba(122,168,255,.25), transparent),
                 linear-gradient(135deg, var(--bg) 0%, var(--bg2) 70%, #fff 100%);}
+  a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
   .wrap{max-width:1100px;margin:0 auto;padding:28px}
   header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
   .brand{display:flex;align-items:center;gap:14px}
   .logo{width:44px;height:44px;border-radius:12px;background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800;box-shadow:var(--shadow)}
   nav{display:flex;gap:14px;color:var(--muted)} nav a{padding:6px 10px;border-radius:999px} nav a:hover{background:#eaf2ff}
   .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:22px} @media(max-width:980px){.grid{grid-template-columns:1fr}}
-  .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
-  .muted{color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .card h2{margin:0 0 12px} .muted{color:var(--muted)} .inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .uploader{border:2px dashed #c9d7f0;border-radius:16px;padding:20px;text-align:center;background:linear-gradient(180deg,#fff,#f7fbff);transition:.25s}
-  .uploader.dragover{border-color:var(--primary);box-shadow:0 0 0 8px rgba(43,108,176,.12)}
-  .uploader input{display:none}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:600;box-shadow:0 8px 18px rgba(43,108,176,.25)}
-  .btn.secondary{background:#eef4ff;color:#274472}
+  .uploader.dragover{border-color:var(--primary);box-shadow:var(--ring)} .uploader input{display:none}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:600;
+       box-shadow:0 8px 18px rgba(43,108,176,.25)} .btn.secondary{background:#eef4ff;color:#274472}
   .opt{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))} @media(max-width:560px){.opt{grid-template-columns:1fr}}
   .opt-group{background:#f7fbff;border:1px solid var(--border);border-radius:14px;padding:12px}
-  .chips{display:flex;gap:8px;flex-wrap:wrap}
-  .chip{border:1px solid #cfe0ff;background:#fff;color:#274472;padding:6px 10px;border-radius:999px;cursor:pointer}
-  .chip.active{background:#e8f0ff;border-color:var(--primary);color:#2b6cb0;box-shadow:0 0 0 8px rgba(43,108,176,.12)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap} .chip{border:1px solid #cfe0ff;background:#fff;color:#274472;padding:6px 10px;border-radius:999px;cursor:pointer}
+  .chip.active{background:#e8f0ff;border-color:var(--primary);color:#2b6cb0;box-shadow:var(--ring)}
   .preview{margin-top:14px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
   .preview img{max-width:240px;max-height:240px;object-fit:cover;border-radius:14px;border:1px solid var(--border);box-shadow:0 10px 24px rgba(0,0,0,.08)}
   .result{display:none;margin-top:14px;border:1px dashed #d7e4ff;border-radius:14px;padding:14px;background:linear-gradient(180deg,#fff,#f7fbff)}
   .result.show{display:block}
-  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px} @media(max-width:720px){.match-grid{grid-template-columns:1fr}}
+  .match-top{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .match-badge{padding:6px 10px;border-radius:999px;background:#eef4ff;border:1px solid #cfe0ff;color:#274472}
+  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px} @media(max-width:720px){.match-grid{grid-template-columns:1fr}}
   .match-card{border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff}
   .match-card img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;border:1px solid #edf1f7}
   .skeleton{width:100%;aspect-ratio:4/5;border-radius:10px;background:linear-gradient(90deg,#eef2f7 0%,#f7f9fc 50%,#eef2f7 100%);background-size:200% 100%;animation:sk 1.2s infinite linear}
@@ -75,27 +77,19 @@
       <div class="opt" style="margin-top:14px">
         <div class="opt-group">
           <div class="muted" style="margin-bottom:8px">Length</div>
-          <div class="chips" data-name="length">
-            <span class="chip">Short</span><span class="chip">Medium</span><span class="chip">Long</span>
-          </div>
+          <div class="chips" data-name="length"><span class="chip">Short</span><span class="chip">Medium</span><span class="chip">Long</span></div>
         </div>
         <div class="opt-group">
           <div class="muted" style="margin-bottom:8px">Style</div>
-          <div class="chips" data-name="style">
-            <span class="chip">Professional</span><span class="chip">Trendy</span><span class="chip">Casual</span>
-          </div>
+          <div class="chips" data-name="style"><span class="chip">Professional</span><span class="chip">Trendy</span><span class="chip">Casual</span></div>
         </div>
         <div class="opt-group">
           <div class="muted" style="margin-bottom:8px">Face Shape</div>
-          <div class="chips" data-name="shape">
-            <span class="chip">Oval</span><span class="chip">Round</span><span class="chip">Square</span><span class="chip">Heart</span>
-          </div>
+          <div class="chips" data-name="shape"><span class="chip">Oval</span><span class="chip">Round</span><span class="chip">Square</span><span class="chip">Heart</span></div>
         </div>
         <div class="opt-group">
           <div class="muted" style="margin-bottom:8px">Occasion</div>
-          <div class="chips" data-name="occasion">
-            <span class="chip">Work</span><span class="chip">Date</span><span class="chip">Event</span>
-          </div>
+          <div class="chips" data-name="occasion"><span class="chip">Work</span><span class="chip">Date</span><span class="chip">Event</span></div>
         </div>
       </div>
 
@@ -114,11 +108,8 @@
           <span class="muted" id="confidence"></span>
           <span class="muted" id="aiNote" style="display:none">· AI generated</span>
         </div>
-        <div class="match-grid">
-          <div class="match-card">
-            <div class="muted" style="margin-bottom:6px">Your Photo</div>
-            <img id="yourPhoto" alt="Your photo">
-          </div>
+        <div class="match-grid" style="margin-top:8px">
+          <div class="match-card"><div class="muted" style="margin-bottom:6px">Your Photo</div><img id="yourPhoto" alt="Your photo"></div>
           <div class="match-card">
             <div class="muted" style="margin-bottom:6px">Suggested Style</div>
             <div id="styleSkeleton" class="skeleton" style="display:none"></div>
@@ -135,9 +126,12 @@
       <ol style="margin:8px 0 0 18px">
         <li>Preview happens <em>locally</em>.</li>
         <li>Choose length, style, face shape, occasion.</li>
-        <li>Click <strong>Find Match</strong>. If <em>Use AI</em> is on, we send your photo to your backend and get a generated image.</li>
+        <li>开启 <strong>Use AI 生成</strong> 后，后端会基于你的照片+选项生成新发型。</li>
       </ol>
-      <p class="muted" style="margin:10px 0 0">Hosting: GitHub Pages + your Cloudflare/Colab backend (keeps API keys secret).</p>
+      <p class="muted" style="margin:10px 0 0">部署：GitHub Pages + Cloudflare Workers（隐藏 API key）。</p>
+      <div style="margin-top:12px;padding:12px;border:1px dashed var(--border);border-radius:12px;background:#f7fbff">
+        <div class="muted"><strong>隐私提醒：</strong>启用 AI 生成时，你的图片会发送到你配置的后端（Replicate 或自托管）。</div>
+      </div>
     </aside>
   </div>
 
@@ -145,18 +139,15 @@
 </div>
 
 <script>
-  /* ========= FRONT-END CONFIG (EDIT THESE) ========= */
-  // 1) Replace with your tunnel/worker URL (no trailing slash)
-  const AI_BACKEND_ENDPOINT = 'https://genetics-combine-king-transportation.trycloudflare.com';
-  // 2) Backend type
-  const AI_BACKEND = 'replicate'; // 'replicate' | 'a1111'
-  // 3) Polling & timeouts
+  // ====== 配置 ======
+  const AI_BACKEND_ENDPOINT = 'https://genetics-combine-king-transportation.trycloudflare.com'; // ← your Worker domain
+  const AI_BACKEND = 'replicate';
   const REQUEST_TIMEOUT_MS = 65000;
   const POLL_INTERVAL_MS   = 1200;
-  const FAST_RETRY_MAX_W   = 768;  // fallback size
+  const FAST_RETRY_MAX_W   = 768;
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  /* ========== Elements ========== */
+  // ====== 元素 ======
   const fileInput = document.getElementById('fileInput');
   const dropzone  = document.getElementById('dropzone');
   const preview   = document.getElementById('preview');
@@ -173,30 +164,39 @@
   const useAI     = document.getElementById('useAI');
   const aiNote    = document.getElementById('aiNote');
 
-  /* ========== Utils ========== */
+  // ====== 统一转 PNG（兼容 JPG/PNG/WebP/AVIF） ======
   async function downscaleDataURL(dataURL, maxW=1280, maxH=1280, quality=0.92){
     return new Promise((resolve, reject)=>{
       const img = new Image();
       img.onload = ()=>{
-        const r = Math.min(maxW/img.width, maxH/img.height, 1);
-        const w = Math.round(img.width*r), h = Math.round(img.height*r);
-        const c = document.createElement('canvas'); c.width=w; c.height=h;
+        const r = Math.min(maxW / img.width, maxH / img.height, 1);
+        const w = Math.round(img.width * r), h = Math.round(img.height * r);
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
         const ctx = c.getContext('2d');
         ctx.clearRect(0,0,w,h);
-        ctx.drawImage(img,0,0,w,h);
-        // unify to PNG so ANY decodable input type works (jpg/png/webp/avif…)
-        resolve(c.toDataURL('image/png', quality));
+        ctx.drawImage(img, 0, 0, w, h);
+        // 输出 PNG，避免 HEIC/AVIF 等后端不识别
+        const out = c.toDataURL('image/png', quality);
+        resolve(out);
       };
-      img.onerror = ()=>reject(new Error('This image type cannot be decoded by your browser.'));
+      img.onerror = ()=>reject(new Error('This image format cannot be decoded by the browser.'));
       img.src = dataURL;
     });
   }
-  async function safeFetch(url, opts){
-    try{ return await fetch(url, opts); }
-    catch{ throw new Error('Failed to fetch'); }
+
+  // ====== 将 data:URL 转成 blob:URL（绕过站点 CSP 限制） ======
+  function dataURLtoObjectURL(dataURL) {
+    const [meta, b64] = dataURL.split(',');
+    const mimeMatch = /data:(.*?);base64/.exec(meta);
+    const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const blob = new Blob([bytes], { type: mime });
+    return URL.createObjectURL(blob);
   }
 
-  /* ========== Drag & drop / file ========== */
+  // ====== 拖拽上传 ======
   ['dragenter','dragover'].forEach(evt=>{
     dropzone.addEventListener(evt, e=>{e.preventDefault();e.stopPropagation();dropzone.classList.add('dragover');});
   });
@@ -205,6 +205,7 @@
   });
   dropzone.addEventListener('drop', e=>{ const f=e.dataTransfer.files?.[0]; if(f) handleFile(f);});
   fileInput.addEventListener('change', e=>{ const f=e.target.files?.[0]; if(f) handleFile(f); });
+
   function handleFile(file){
     if(!file || !file.type.startsWith('image/')) return;
     const reader = new FileReader();
@@ -217,7 +218,7 @@
     reader.readAsDataURL(file);
   }
 
-  /* ========== Prompt bits ========== */
+  // ====== 选项 & Prompt ======
   function getFilters(){
     const out={};
     document.querySelectorAll('.chips').forEach(g=>{
@@ -242,6 +243,8 @@
     const conf = Math.round(90 + Math.random()*8);
     return {name, conf};
   }
+
+  // 单选 UI
   document.querySelectorAll('.chips').forEach(group=>{
     group.addEventListener('click', e=>{
       const chip=e.target.closest('.chip'); if(!chip) return;
@@ -250,7 +253,7 @@
     });
   });
 
-  /* ========== Generate flow (create + poll) ========== */
+  // ====== 主流程 ======
   matchBtn.addEventListener('click', async ()=>{
     if(!yourPhoto.src){
       dropzone.scrollIntoView({behavior:'smooth',block:'center'});
@@ -258,11 +261,11 @@
       return;
     }
     const t0 = performance.now();
-    const f = getFilters();
-    const {name, conf} = fakeMatchName(f);
+    const filters = getFilters();
+    const {name, conf} = fakeMatchName(filters);
     matchTitle.textContent = name;
     confidence.textContent = `· Confidence ~ ${conf}%`;
-    tags.textContent = `#${f.length||'Medium'} #${f.style||'Professional'} ${f.shape?('#'+f.shape):''} ${f.occasion?('#'+f.occasion):''}`;
+    tags.textContent = `#${filters.length||'Medium'} #${filters.style||'Professional'} ${filters.shape?('#'+filters.shape):''} ${filters.occasion?('#'+filters.occasion):''}`;
     resultBox.classList.add('show');
 
     stylePhoto.style.display='none';
@@ -272,7 +275,9 @@
     try{
       let url;
       if(useAI.checked){
-        url = await generateWithAI(yourPhoto.src, buildPrompt(f), 1280, 0.92);
+        url = await generateWithAI(yourPhoto.src, buildPrompt(filters), 1280, 0.92);
+        // 如果后端给的是 data:URL，转成 blob:URL 规避 CSP
+        if (url.startsWith('data:')) url = dataURLtoObjectURL(url);
       }else{
         url = makePlaceholder('#cfe8d6,#eaf7ef');
       }
@@ -296,18 +301,17 @@
   });
   tryAnother.addEventListener('click', ()=>{ resultBox.classList.remove('show'); window.scrollTo({top:0,behavior:'smooth'}); });
 
+  // ====== 与后端交互 ======
   async function generateWithAI(dataURL, prompt, maxSide=1280, quality=0.92){
-    // compress + unify => PNG
     const small = await downscaleDataURL(dataURL, maxSide, maxSide, quality);
     const b64   = small.split(',')[1];
 
-    // create
+    // 创建任务
     let create = await safeFetch(`${AI_BACKEND_ENDPOINT}/create`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: b64 })
     });
 
-    // fallback create (smaller)
     if(!create.ok){
       const smaller = await downscaleDataURL(dataURL, FAST_RETRY_MAX_W, FAST_RETRY_MAX_W, 0.9);
       const b64b = smaller.split(',')[1];
@@ -320,7 +324,7 @@
     const cj = await create.json();
     if(!cj.id) throw new Error("create: no id");
 
-    // poll
+    // 轮询
     const start = Date.now();
     while(true){
       const r = await safeFetch(`${AI_BACKEND_ENDPOINT}/status/${cj.id}`);
@@ -335,6 +339,15 @@
     }
   }
 
+  async function safeFetch(url, opts){
+    try{
+      return await fetch(url, opts);
+    }catch(e){
+      throw new Error('Failed to fetch');
+    }
+  }
+
+  // 占位图
   function makePlaceholder(grad){
     const [c1,c2]=grad.split(',');
     const cvs=document.createElement('canvas'); cvs.width=800; cvs.height=1000;
