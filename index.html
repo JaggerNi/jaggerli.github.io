@@ -142,11 +142,11 @@
 
 <script>
   /* ====== 配置：改成你的 Worker 域名 ====== */
-  const AI_BACKEND_ENDPOINT = 'https://api.jaggerli.com'; // 例如：https://api.jaggerli.com 或 https://haircut.lijie625.workers.dev
-  const AI_BACKEND = 'replicate';         // 'replicate' | 'a1111'
-  const REQUEST_TIMEOUT_MS = 65000;       // 总超时（前端轮询保护）
-  const POLL_INTERVAL_MS   = 1200;        // 轮询间隔
-  const FAST_RETRY_MAX_W   = 768;         // 降级重试尺寸
+  const AI_BACKEND_ENDPOINT = 'https://api.jaggerli.com'; // 或 https://haircut.lijie625.workers.dev
+  const AI_BACKEND = 'replicate';
+  const REQUEST_TIMEOUT_MS = 65000;
+  const POLL_INTERVAL_MS   = 1200;
+  const FAST_RETRY_MAX_W   = 768;
   document.getElementById('year').textContent = new Date().getFullYear();
 
   /* ====== 元素 ====== */
@@ -177,8 +177,7 @@
         const ctx = c.getContext('2d');
         ctx.clearRect(0,0,w,h);
         ctx.drawImage(img, 0, 0, w, h);
-        // ✅ 统一输出 PNG：JPG/PNG/WEBP/AVIF 都能发送
-        const out = c.toDataURL('image/png', quality);
+        const out = c.toDataURL('image/png', quality); // 统一 PNG
         resolve(out);
       };
       img.onerror = ()=>reject(new Error('此图片格式浏览器无法解码，请改用 JPG/PNG/WEBP/AVIF'));
@@ -291,30 +290,27 @@
 
   /* ====== 与 Worker 交互 ====== */
   async function generateWithAI(dataURL, prompt, maxSide=1280, quality=0.92){
-    // 第一次压缩（统一 PNG）
+    // 第一次压缩（统一 PNG）——改1：直接传完整 dataURL
     const small = await downscaleDataURL(dataURL, maxSide, maxSide, quality);
-    const b64   = small.split(',')[1];
 
-    // 1) 创建
     let create = await safeFetch(`${AI_BACKEND_ENDPOINT}/create`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: b64 })
+      body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: small })
     });
 
-    // 创建失败则降级一轮再试
+    // 创建失败则降级一轮再试 ——改2：降级也传完整 dataURL
     if(!create.ok){
       const smaller = await downscaleDataURL(dataURL, FAST_RETRY_MAX_W, FAST_RETRY_MAX_W, 0.9);
-      const b64b = smaller.split(',')[1];
       create = await safeFetch(`${AI_BACKEND_ENDPOINT}/create`, {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: b64b })
+        body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: smaller })
       });
     }
     if(!create.ok) throw new Error("create: " + (await create.text().catch(()=>create.statusText)));
     const cj = await create.json();
     if(!cj.id) throw new Error("create: no id");
 
-    // 2) 轮询
+    // 轮询
     const start = Date.now();
     while(true){
       const r = await safeFetch(`${AI_BACKEND_ENDPOINT}/status/${cj.id}`);
