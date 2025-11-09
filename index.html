@@ -1,169 +1,9 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hairstyle Matcher | AI Powered</title>
-<meta name="description" content="Upload a photo, choose your preferences, and get an AI-generated hairstyle suggestion.">
-<style>
-  :root{
-    --bg:#eef5ff; --bg2:#f8fbff; --card:#fff; --muted:#6b7280; --text:#1f2937;
-    --primary:#2b6cb0; --accent:#7aa8ff; --border:#dbe3f0; --shadow:0 16px 40px rgba(16,42,87,.12);
-    --ring:0 0 0 8px rgba(43,108,176,.12); --radius:18px;
-  }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--text);
-    background: radial-gradient(1200px 600px at -10% -10%, rgba(122,168,255,.25), transparent),
-                linear-gradient(135deg, var(--bg) 0%, var(--bg2) 70%, #fff 100%);}
-  a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
-  .wrap{max-width:1100px;margin:0 auto;padding:28px}
-  header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
-  .brand{display:flex;align-items:center;gap:14px}
-  .logo{width:44px;height:44px;border-radius:12px;background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800;box-shadow:var(--shadow)}
-  nav{display:flex;gap:14px;color:var(--muted)} nav a{padding:6px 10px;border-radius:999px} nav a:hover{background:#eaf2ff}
-  .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:22px} @media(max-width:980px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
-  .card h2{margin:0 0 12px} .muted{color:var(--muted)} .inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .uploader{border:2px dashed #c9d7f0;border-radius:16px;padding:20px;text-align:center;background:linear-gradient(180deg,#fff,#f7fbff);transition:.25s}
-  .uploader.dragover{border-color:var(--primary);box-shadow:var(--ring)} .uploader input{display:none}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:600;
-       box-shadow:0 8px 18px rgba(43,108,176,.25)} .btn.secondary{background:#eef4ff;color:#274472}
-  .opt{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))} @media(max-width:560px){.opt{grid-template-columns:1fr}}
-  .opt-group{background:#f7fbff;border:1px solid var(--border);border-radius:14px;padding:12px}
-  .chips{display:flex;gap:8px;flex-wrap:wrap} .chip{border:1px solid #cfe0ff;background:#fff;color:#274472;padding:6px 10px;border-radius:999px;cursor:pointer}
-  .chip.active{background:#e8f0ff;border-color:var(--primary);color:var(--primary);box-shadow:var(--ring)}
-  .preview{margin-top:14px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-  .preview img{max-width:240px;max-height:240px;object-fit:cover;border-radius:14px;border:1px solid var(--border);box-shadow:0 10px 24px rgba(0,0,0,.08)}
-  .result{display:none;margin-top:14px;border:1px dashed #d7e4ff;border-radius:14px;padding:14px;background:linear-gradient(180deg,#fff,#f7fbff)}
-  .result.show{display:block}
-  .match-top{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-  .match-badge{padding:6px 10px;border-radius:999px;background:#eef4ff;border:1px solid #cfe0ff;color:#274472}
-  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px} @media(max-width:720px){.match-grid{grid-template-columns:1fr}}
-  .match-card{border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff}
-  .match-card img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;border:1px solid #edf1f7}
-  .skeleton{width:100%;aspect-ratio:4/5;border-radius:10px;background:linear-gradient(90deg,#eef2f7 0%,#f7f9fc 50%,#eef2f7 100%);
-    background-size:200% 100%;animation:sk 1.2s infinite linear}
-  @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
-  .toggle{display:inline-flex;align-items:center;gap:8px}
-  .toggle input{appearance:none;width:44px;height:26px;border-radius:999px;position:relative;background:#cfdaf2;outline:none;cursor:pointer}
-  .toggle input:checked{background:#2b6cb0}
-  .toggle input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
-  .toggle input:checked::after{left:21px}
-  footer{margin:24px 0 6px;color:var(--muted);text-align:center}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <header>
-    <div class="brand">
-      <div class="logo">H</div>
-      <div>
-        <h1 style="margin:0 0 4px">Hairstyle Matcher</h1>
-        <div class="muted">Upload · Choose · <strong>AI Generate</strong></div>
-      </div>
-    </div>
-    <nav>
-      <a href="#upload">Upload</a>
-      <a href="#result">Result</a>
-    </nav>
-  </header>
-
-  <div class="grid">
-    <!-- 左侧：上传与选项 -->
-    <section class="card" id="upload">
-      <h2>1) Upload & Preferences</h2>
-      <div class="uploader" id="dropzone">
-        <p style="margin:0 0 10px"><strong>Drag & drop</strong> your photo here, or</p>
-        <label class="btn">
-          <input id="fileInput" type="file" accept="image/*"> Choose a Photo
-        </label>
-        <div class="muted" style="font-size:13px;margin-top:6px">Processed locally · Your image isn’t uploaded unless AI is enabled</div>
-        <div class="preview" id="preview"></div>
-      </div>
-
-      <div class="opt" style="margin-top:14px">
-        <div class="opt-group">
-          <div class="muted" style="margin-bottom:8px">Length</div>
-          <div class="chips" data-name="length">
-            <span class="chip">Short</span><span class="chip">Medium</span><span class="chip">Long</span>
-          </div>
-        </div>
-        <div class="opt-group">
-          <div class="muted" style="margin-bottom:8px">Style</div>
-          <div class="chips" data-name="style">
-            <span class="chip">Professional</span><span class="chip">Trendy</span><span class="chip">Casual</span>
-          </div>
-        </div>
-        <div class="opt-group">
-          <div class="muted" style="margin-bottom:8px">Face Shape</div>
-          <div class="chips" data-name="shape">
-            <span class="chip">Oval</span><span class="chip">Round</span><span class="chip">Square</span><span class="chip">Heart</span>
-          </div>
-        </div>
-        <div class="opt-group">
-          <div class="muted" style="margin-bottom:8px">Occasion</div>
-          <div class="chips" data-name="occasion">
-            <span class="chip">Work</span><span class="chip">Date</span><span class="chip">Event</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="inline" style="margin-top:14px">
-        <button class="btn" id="matchBtn">Find Match</button>
-        <button class="btn secondary" id="resetBtn">Reset</button>
-        <label class="toggle" title="Use AI to generate a new hairstyle image">
-          <input type="checkbox" id="useAI" checked>
-          <span class="muted">Use AI 生成</span>
-        </label>
-      </div>
-
-      <div id="result" class="result" aria-live="polite">
-        <div class="match-top">
-          <span class="match-badge">Your Match</span>
-          <span id="matchTitle" style="font-weight:700">—</span>
-          <span class="muted" id="confidence"></span>
-          <span class="muted" id="aiNote" style="display:none">· AI generated</span>
-        </div>
-        <div class="match-grid" style="margin-top:8px">
-          <div class="match-card">
-            <div class="muted" style="margin-bottom:6px">Your Photo</div>
-            <img id="yourPhoto" alt="Your photo preview">
-          </div>
-          <div class="match-card">
-            <div class="muted" style="margin-bottom:6px">Suggested Style</div>
-            <div id="styleSkeleton" class="skeleton" style="display:none"></div>
-            <img id="stylePhoto" alt="Suggested hairstyle" style="display:none">
-            <div style="margin-top:8px" class="muted" id="tags"></div>
-          </div>
-        </div>
-        <div class="inline" style="margin-top:10px">
-          <button class="btn secondary" id="tryAnother">Try Another</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 右侧：说明 -->
-    <aside class="card">
-      <h2>How it works</h2>
-      <ol style="margin:8px 0 0 18px">
-        <li>Preview happens <em>locally</em>.</li>
-        <li>Choose length, style, face shape, occasion.</li>
-        <li>点击“Find Match”，若开启 <strong>Use AI 生成</strong>，后端将基于你的照片 + 选项生成带新发型的图片。</li>
-      </ol>
-      <p class="muted" style="margin:10px 0 0">部署：GitHub Pages + 你的 Serverless/Workers 代理（隐藏 API Key）。</p>
-      <div style="margin-top:12px;padding:12px;border:1px dashed var(--border);border-radius:12px;background:#f7fbff">
-        <div class="muted"><strong>隐私提醒：</strong>启用 AI 生成时，你的图片会被发送到你配置的后端（Replicate 或你的本地 A1111）。</div>
-      </div>
-    </aside>
-  </div>
-
-  <footer>© <span id="year"></span> Hairstyle Matcher</footer>
-</div>
-
 <script>
-  // ======= 配置：把它改成你的 serverless/worker 地址 =======
-  const AI_BACKEND = 'replicate';    // 'replicate' | 'a1111' | 'openai'(占位)
-  const AI_BACKEND_ENDPOINT = 'https://api.jaggerli.com'; // 代理统一入口
+  // ======= 基本配置 =======
+  const AI_BACKEND = 'replicate';               // 'replicate' | 'a1111' | 'openai'(占位)
+  const AI_BACKEND_ENDPOINT = 'https://api.jaggerli.com';
+  const REQUEST_TIMEOUT_MS = 20000;             // 20s 超时
+  const FAST_RETRY_MAX_W = 896;                 // 超时后，自动再压缩一轮到 896px
 
   // ======= 现有 UI 变量 =======
   const fileInput = document.getElementById('fileInput');
@@ -183,7 +23,29 @@
   const aiNote    = document.getElementById('aiNote');
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // 拖拽上传
+  // ======= 工具：压缩到最长边 1280、质量 0.85 =======
+  async function downscaleDataURL(dataURL, maxW=1280, maxH=1280, quality=0.85){
+    return new Promise(res=>{
+      const img=new Image(); img.onload=()=>{
+        const r=Math.min(maxW/img.width, maxH/img.height, 1);
+        const w=Math.round(img.width*r), h=Math.round(img.height*r);
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        const ctx=c.getContext('2d'); ctx.drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg', quality));
+      }; img.src=dataURL;
+    });
+  }
+
+  // ======= 工具：fetch 超时封装 =======
+  async function fetchWithTimeout(url, opts={}, ms=REQUEST_TIMEOUT_MS){
+    const ctrl = new AbortController();
+    const id = setTimeout(()=>ctrl.abort('timeout'), ms);
+    try{
+      return await fetch(url, {...opts, signal: ctrl.signal});
+    } finally { clearTimeout(id); }
+  }
+
+  // ======= 拖拽上传 =======
   ['dragenter','dragover'].forEach(evt=>{
     dropzone.addEventListener(evt, e=>{e.preventDefault();e.stopPropagation();dropzone.classList.add('dragover');});
   });
@@ -209,7 +71,7 @@
     reader.readAsDataURL(file);
   }
 
-  // 选项收集
+  // ======= 选项收集 / Prompt =======
   function getFilters(){
     const out={};
     document.querySelectorAll('.chips').forEach(g=>{
@@ -219,18 +81,14 @@
     });
     return out;
   }
-
-  // 构造提示词（英文更利于通用模型）
   function buildPrompt(filters){
     const len = filters.length || 'Medium';
     const sty = filters.style  || 'Professional';
     const shp = filters.shape  || 'Oval';
     const occ = filters.occasion || 'Work';
-    return `Add a ${len.toLowerCase()} ${sty.toLowerCase()} hairstyle suitable for ${occ.toLowerCase()} to this person with a ${shp.toLowerCase()} face. 
+    return `Add a ${len.toLowerCase()} ${sty.toLowerCase()} hairstyle suitable for ${occ.toLowerCase()} to this person with a ${shp.toLowerCase()} face.
 keep the same face identity and lighting, natural realistic photo, high detail hair strands, cinematic, 8k portrait.`;
   }
-
-  // 假匹配名与“置信度”
   function fakeMatchName(filters){
     const map = {
       Short: {Professional:'Clean Fade', Trendy:'Modern Quiff', Casual:'Messy Crop'},
@@ -242,8 +100,14 @@ keep the same face identity and lighting, natural realistic photo, high detail h
     return {name, conf};
   }
 
+  // ======= 生成主流程（含超时 + 自动降级重试） =======
   matchBtn.addEventListener('click', async ()=>{
-    if(!yourPhoto.src){ dropzone.scrollIntoView({behavior:'smooth',block:'center'}); dropzone.classList.add('dragover'); setTimeout(()=>dropzone.classList.remove('dragover'),700); return;}
+    if(!yourPhoto.src){
+      dropzone.scrollIntoView({behavior:'smooth',block:'center'});
+      dropzone.classList.add('dragover'); setTimeout(()=>dropzone.classList.remove('dragover'),700);
+      return;
+    }
+    const t0 = performance.now();
     const filters = getFilters();
     const {name, conf} = fakeMatchName(filters);
     matchTitle.textContent = name;
@@ -251,30 +115,31 @@ keep the same face identity and lighting, natural realistic photo, high detail h
     tags.textContent = `#${filters.length||'Medium'} #${filters.style||'Professional'} ${filters.shape?('#'+filters.shape):''} ${filters.occasion?('#'+filters.occasion):''}`;
     resultBox.classList.add('show');
 
-    // 占位/骨架
     stylePhoto.style.display='none';
     styleSkeleton.style.display='block';
     aiNote.style.display = useAI.checked ? 'inline' : 'none';
 
-    if(useAI.checked){
-      try{
-        const url = await generateWithAI(yourPhoto.src, buildPrompt(filters));
-        stylePhoto.src = url;
-      }catch(err){
-        console.error(err);
-        alert('AI 生成失败：' + (err?.message||err));
-        // 回退占位色块
-        stylePhoto.src = makePlaceholder('#cfe8d6,#eaf7ef');
-      }
-    }else{
-      // 不启用AI时，用渐变占位
-      stylePhoto.src = makePlaceholder('#cfe8d6,#eaf7ef');
-    }
+    try{
+      let url;
+      if(useAI.checked){
+        // 先压缩到 1280
+        url = await generateWithAI(yourPhoto.src, buildPrompt(filters), 1280, 0.85);
 
-    // 展示图片
-    styleSkeleton.style.display='none';
-    stylePhoto.style.display='block';
-    document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+      }else{
+        url = makePlaceholder('#cfe8d6,#eaf7ef');
+      }
+      stylePhoto.src = url;
+    }catch(err){
+      console.error(err);
+      alert('AI 生成失败：' + (err?.message||err));
+      stylePhoto.src = makePlaceholder('#cfe8d6,#eaf7ef');
+    }finally{
+      styleSkeleton.style.display='none';
+      stylePhoto.style.display='block';
+      document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+      const sec = ((performance.now()-t0)/1000).toFixed(1);
+      confidence.textContent += ` · ${sec}s`;
+    }
   });
 
   resetBtn.addEventListener('click', ()=>{
@@ -283,23 +148,50 @@ keep the same face identity and lighting, natural realistic photo, high detail h
   });
   tryAnother.addEventListener('click', ()=>{ resultBox.classList.remove('show'); window.scrollTo({top:0,behavior:'smooth'}); });
 
-  // 前端 -> 代理：把 dataURL + prompt 发给你的后端
-  async function generateWithAI(dataURL, prompt){
-    // dataURL 转纯 base64
-    const b64 = dataURL.split(',')[1];
-    const res = await fetch(AI_BACKEND_ENDPOINT, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: b64 })
-    });
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json(); // { image_url | image_base64 }
-    if(data.image_url)   return data.image_url;
-    if(data.image_base64) return 'data:image/png;base64,'+data.image_base64;
-    throw new Error('No image returned');
+  // ======= 前端 -> 代理：压缩 + 超时 + 降级重试 =======
+  async function generateWithAI(dataURL, prompt, maxSide=1280, quality=0.85){
+    // 压缩一轮
+    const small = await downscaleDataURL(dataURL, maxSide, maxSide, quality);
+    const b64 = small.split(',')[1];
+
+    try{
+      const res = await fetchWithTimeout(AI_BACKEND_ENDPOINT, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: b64 })
+      });
+      if(!res.ok){
+        const t = await res.text().catch(()=>res.statusText);
+        throw new Error(`HTTP ${res.status} ${t}`);
+      }
+      const data = await res.json(); // { image_url | image_base64 }
+      if(data.image_url)   return data.image_url;
+      if(data.image_base64) return 'data:image/png;base64,'+data.image_base64;
+      throw new Error('No image returned');
+    }catch(err){
+      // 如果是超时或网络错误，自动降级再试一次（896px）
+      if(String(err).includes('timeout') || String(err).includes('Failed to fetch')){
+        const smaller = await downscaleDataURL(dataURL, FAST_RETRY_MAX_W, FAST_RETRY_MAX_W, 0.8);
+        const b64b = smaller.split(',')[1];
+        const res2 = await fetchWithTimeout(AI_BACKEND_ENDPOINT, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: b64b })
+        }, REQUEST_TIMEOUT_MS);
+        if(!res2.ok){
+          const t = await res2.text().catch(()=>res2.statusText);
+          throw new Error(`(retry) HTTP ${res2.status} ${t}`);
+        }
+        const data2 = await res2.json();
+        if(data2.image_url)   return data2.image_url;
+        if(data2.image_base64) return 'data:image/png;base64,'+data2.image_base64;
+        throw new Error('(retry) No image returned');
+      }
+      throw err;
+    }
   }
 
-  // 简单占位图
+  // ======= 简单占位图 =======
   function makePlaceholder(grad){
     const [c1,c2]=grad.split(',');
     const cvs=document.createElement('canvas'); cvs.width=800; cvs.height=1000;
@@ -311,7 +203,7 @@ keep the same face identity and lighting, natural realistic photo, high detail h
     return cvs.toDataURL('image/png');
   }
 
-  // 单选逻辑
+  // ======= 单选逻辑 =======
   document.querySelectorAll('.chips').forEach(group=>{
     group.addEventListener('click', e=>{
       const chip = e.target.closest('.chip'); if(!chip) return;
@@ -320,5 +212,3 @@ keep the same face identity and lighting, natural realistic photo, high detail h
     });
   });
 </script>
-</body>
-</html>
