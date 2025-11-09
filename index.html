@@ -141,12 +141,12 @@
 </div>
 
 <script>
-  /* ====== 配置：把它改成你的 Worker 域名 ====== */
-  const AI_BACKEND_ENDPOINT = 'https://api.jaggerli.com'; // 或 https://api.jaggerli.com
+  /* ====== 配置：改成你的 Worker 域名 ====== */
+  const AI_BACKEND_ENDPOINT = 'https://api.jaggerli.com'; // 例如：https://api.jaggerli.com 或 https://haircut.lijie625.workers.dev
   const AI_BACKEND = 'replicate';         // 'replicate' | 'a1111'
-  const REQUEST_TIMEOUT_MS = 65000;       // 总超时 65s（更稳）
+  const REQUEST_TIMEOUT_MS = 65000;       // 总超时（前端轮询保护）
   const POLL_INTERVAL_MS   = 1200;        // 轮询间隔
-  const FAST_RETRY_MAX_W   = 768;         // 备用重试尺寸
+  const FAST_RETRY_MAX_W   = 768;         // 降级重试尺寸
   document.getElementById('year').textContent = new Date().getFullYear();
 
   /* ====== 元素 ====== */
@@ -166,16 +166,23 @@
   const useAI     = document.getElementById('useAI');
   const aiNote    = document.getElementById('aiNote');
 
-  /* ====== 工具：压缩到最长边 1280、质量 0.85 ====== */
-  async function downscaleDataURL(dataURL, maxW=1280, maxH=1280, quality=0.85){
-    return new Promise(res=>{
-      const img=new Image(); img.onload=()=>{
-        const r=Math.min(maxW/img.width, maxH/img.height, 1);
-        const w=Math.round(img.width*r), h=Math.round(img.height*r);
-        const c=document.createElement('canvas'); c.width=w; c.height=h;
-        c.getContext('2d').drawImage(img,0,0,w,h);
-        res(c.toDataURL('image/jpeg', quality));
-      }; img.src=dataURL;
+  /* ====== 把任意可解码图片 → PNG（统一发送） ====== */
+  async function downscaleDataURL(dataURL, maxW=1280, maxH=1280, quality=0.92){
+    return new Promise((resolve, reject)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const r = Math.min(maxW / img.width, maxH / img.height, 1);
+        const w = Math.round(img.width * r), h = Math.round(img.height * r);
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.clearRect(0,0,w,h);
+        ctx.drawImage(img, 0, 0, w, h);
+        // ✅ 统一输出 PNG：JPG/PNG/WEBP/AVIF 都能发送
+        const out = c.toDataURL('image/png', quality);
+        resolve(out);
+      };
+      img.onerror = ()=>reject(new Error('此图片格式浏览器无法解码，请改用 JPG/PNG/WEBP/AVIF'));
+      img.src = dataURL;
     });
   }
 
@@ -258,7 +265,7 @@
     try{
       let url;
       if(useAI.checked){
-        url = await generateWithAI(yourPhoto.src, buildPrompt(filters), 1280, 0.85);
+        url = await generateWithAI(yourPhoto.src, buildPrompt(filters), 1280, 0.92);
       }else{
         url = makePlaceholder('#cfe8d6,#eaf7ef');
       }
@@ -282,21 +289,23 @@
   });
   tryAnother.addEventListener('click', ()=>{ resultBox.classList.remove('show'); window.scrollTo({top:0,behavior:'smooth'}); });
 
-  async function generateWithAI(dataURL, prompt, maxSide=1280, quality=0.85){
-    // 第一次压缩
+  /* ====== 与 Worker 交互 ====== */
+  async function generateWithAI(dataURL, prompt, maxSide=1280, quality=0.92){
+    // 第一次压缩（统一 PNG）
     const small = await downscaleDataURL(dataURL, maxSide, maxSide, quality);
     const b64   = small.split(',')[1];
 
     // 1) 创建
-    let create = await fetch(AI_BACKEND_ENDPOINT + "/create", {
+    let create = await safeFetch(`${AI_BACKEND_ENDPOINT}/create`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: b64 })
     });
+
+    // 创建失败则降级一轮再试
     if(!create.ok){
-      // 如果创建失败，降级再压缩一轮重试
-      const smaller = await downscaleDataURL(dataURL, FAST_RETRY_MAX_W, FAST_RETRY_MAX_W, 0.8);
+      const smaller = await downscaleDataURL(dataURL, FAST_RETRY_MAX_W, FAST_RETRY_MAX_W, 0.9);
       const b64b = smaller.split(',')[1];
-      create = await fetch(AI_BACKEND_ENDPOINT + "/create", {
+      create = await safeFetch(`${AI_BACKEND_ENDPOINT}/create`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ backend: AI_BACKEND, prompt, image_base64: b64b })
       });
@@ -308,7 +317,7 @@
     // 2) 轮询
     const start = Date.now();
     while(true){
-      const r = await fetch(AI_BACKEND_ENDPOINT + "/status/" + cj.id);
+      const r = await safeFetch(`${AI_BACKEND_ENDPOINT}/status/${cj.id}`);
       if(!r.ok) throw new Error("status: " + (await r.text().catch(()=>r.statusText)));
       const s = await r.json();
       if(s.status === 'succeeded'){
@@ -320,6 +329,16 @@
     }
   }
 
+  // fetch 包装（更友好的失败信息）
+  async function safeFetch(url, opts){
+    try{
+      return await fetch(url, opts);
+    }catch(e){
+      throw new Error('Failed to fetch');
+    }
+  }
+
+  /* ====== 简单占位图 ====== */
   function makePlaceholder(grad){
     const [c1,c2]=grad.split(',');
     const cvs=document.createElement('canvas'); cvs.width=800; cvs.height=1000;
