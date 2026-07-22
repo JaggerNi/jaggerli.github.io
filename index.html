@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Jagger Jie Li | Data & Business Analytics</title>
+  <meta
+    name="description"
+    content="Portfolio of Jagger Jie Li — data and business analytics professional with experience in financial services, wealth management, investment data, and machine learning."
+  />
+  <link
+    rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%232b6cb0'/><text x='50' y='64' font-size='56' text-anchor='middle' fill='%23fff' font-family='Arial,sans-serif'>J</text></svg>"
+  />
+
+  <style>
+    :root {
+      --bg: #eaf3ff;
+      --bg-2: #f6faff;
+      --bg-3: #ffffff;
+      --panel: rgba(255, 255, 255, 0.94);
+      --muted: #5b6b87;
+      --primary: #2b6cb0;
+      --primary-soft: rgba(43, 108, 176, 0.10);
+      --border: #dbe3f0;
+      --text: #1f2937;
+      --shadow: 0 10px 28px rgba(16, 42, 87, 0.09);
+      --link: #2b6cb0;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #0f172a;
+      --bg-2: #0b1222;
+      --bg-3: #111827;
+      --panel: rgba(17, 24, 39, 0.95);
+      --muted: #94a3b8;
+      --primary: #22d3ee;
+      --primary-soft: rgba(34, 211, 238, 0.11);
+      --border: #273449;
+      --text: #e5e7eb;
+      --shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+      --link: #22d3ee;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      font: 16px/1.62 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 52%, var(--bg-3) 100%);
+      background-attachment: fixed;
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus-visible {
+      text-decoration: underline;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      flex: 0 0 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+      font-size: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: clamp(25px, 3vw, 32px);
+      line-height: 1.15;
+    }
+
+    .title .sub {
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .contact-panel {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 13px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 42px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 650;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      align-items: stretch;
+      gap: 22px;
+    }
+
+    .side {
+      padding: 18px;
+    }
+
+    .photo {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      display: block;
+      object-fit: cover;
+      object-position: center top;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .block {
+      margin-top: 21px;
+    }
+
+    h2 {
+      margin: 0 0 11px;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    li + li {
+      margin-top: 7px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .education-item + .education-item {
+      margin-top: 15px;
+    }
+
+    .education-item .muted {
+      margin-top: 4px;
+      font-size: 14px;
+    }
+
+    .links-inline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .sep {
+      color: var(--muted);
+      opacity: 0.75;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .main-section {
+      padding: 20px;
+    }
+
+    .profile-copy {
+      text-align: left;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .skills-grid li {
+      margin: 0;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--primary-soft);
+    }
+
+    .experience-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .experience-item {
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .experience-item:first-child {
+      padding-top: 3px;
+      border-top: 0;
+    }
+
+    .experience-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .experience-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .experience-title {
+      font-weight: 750;
+    }
+
+    .experience-meta {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .role {
+      margin-top: 2px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .experience-item ul {
+      margin-top: 8px;
+    }
+
+    footer {
+      margin-top: 24px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .heart {
+      display: inline-block;
+      background: linear-gradient(45deg, #ff4d4d, #ff6ec7, #ffa94d, #ff4d4d);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: heartbeat 1.5s ease-in-out infinite, gradientMove 6s ease infinite;
+      transform-origin: center;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25%, 60% { transform: scale(1.25); }
+      40%, 80% { transform: scale(1); }
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 980px) {
+      header {
+        align-items: flex-start;
+      }
+
+      .header-actions {
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        display: grid;
+        grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+        gap: 20px;
+      }
+
+      .side-content .block:first-child {
+        margin-top: 0;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .wrap {
+        width: min(100% - 22px, 1120px);
+        padding: 14px 0 20px;
+      }
+
+      header {
+        flex-direction: column;
+      }
+
+      .header-actions {
+        width: 100%;
+        align-items: stretch;
+      }
+
+      .contact-panel {
+        flex-wrap: wrap;
+        white-space: normal;
+      }
+
+      .layout,
+      .side {
+        display: block;
+      }
+
+      .side-content {
+        margin-top: 18px;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .experience-head {
+        display: block;
+      }
+
+      .experience-meta {
+        margin-top: 5px;
+        text-align: left;
+        white-space: normal;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">J</div>
+        <div class="title">
+          <h1>Jagger Jie Li</h1>
+          <div class="sub">Data &amp; Business Analytics · Financial Services · Hong Kong</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="panel contact-panel">
+          <span class="badge">IANG Visa Holder</span>
+          <a href="mailto:Jaggerxlee@gmail.com">Jaggerxlee@gmail.com</a>
+          <span class="sep">·</span>
+          <a href="tel:+85255650353">+852 5565 0353</a>
+        </div>
+
+        <button id="themeBtn" class="theme-toggle" type="button" aria-label="Switch colour theme">
+          <span id="themeIcon" aria-hidden="true">🌙</span>
+          <span id="themeText">Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="panel side">
+        <div>
+          <img class="photo" src="AVATAR.png" alt="Portrait of Jagger Jie Li" />
+        </div>
+
+        <div class="side-content">
+          <section class="block" aria-labelledby="education-title">
+            <h2 id="education-title">Education</h2>
+
+            <div class="education-item">
+              <h3>Master of Science in Business Analytics</h3>
+              <div>The University of Hong Kong</div>
+              <div class="muted">Aug 2022 – Dec 2023 · FinTech Club President</div>
+            </div>
+
+            <div class="education-item">
+              <h3>Bachelor of Management in Public Administration</h3>
+              <div>Huazhong University of Science and Technology</div>
+              <div class="muted">Sep 2013 – Jul 2017 · Academic Excellence Award · GPA 3.65/4.00</div>
+            </div>
+          </section>
+
+          <section class="block" aria-labelledby="project-title">
+            <h2 id="project-title">Selected Project</h2>
+            <h3>DHgate.com — Capstone Project</h3>
+            <div class="muted">Team Leader · Mar 2023 – May 2023 · Shenzhen</div>
+            <ul>
+              <li>Led a team to build machine-learning models using U.S. TikTok live-streaming data and translated the findings into an actionable e-commerce SOP covering product mix, audience size, and session planning.</li>
+            </ul>
+          </section>
+
+          <section class="block" aria-labelledby="publication-title">
+            <h2 id="publication-title">Publication</h2>
+            <a href="https://jaggerli.com/TikTok_SOP.pdf" target="_blank" rel="noopener noreferrer">
+              Standard Operating Procedure for TikTok Live-Streaming E-commerce in the U.S. Region
+            </a>
+          </section>
+
+          <section class="block" aria-labelledby="links-title">
+            <h2 id="links-title">Links</h2>
+            <div class="links-inline">
+              <a href="https://github.com/JaggerNi" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <span class="sep">|</span>
+              <a href="https://www.linkedin.com/in/jaggerxli/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="panel main-section" aria-labelledby="profile-title">
+          <h2 id="profile-title">Profile</h2>
+          <p class="profile-copy">
+            Data and business analytics professional with experience across financial services, wealth management, investment-data reconciliation, and machine learning. Strong foundation in Python, SQL, ETL pipelines, predictive modelling, and BI reporting, with the ability to translate business and client requirements into structured, data-informed recommendations.
+          </p>
+        </section>
+
+        <section class="panel main-section" aria-labelledby="skills-title">
+          <h2 id="skills-title">Skills &amp; Tech Stack</h2>
+          <ul class="skills-grid">
+            <li><strong>Programming:</strong><br />Python · SQL · VBA</li>
+            <li><strong>Analytics Tools:</strong><br />Databricks · Tableau · Excel · RStudio · Google Colab</li>
+            <li><strong>Cloud &amp; Data Platforms:</strong><br />Azure · Oracle Cloud · Snowflake · Databricks</li>
+            <li><strong>Data Science:</strong><br />Predictive Modelling · Time Series · Statistical Modelling · Feature Engineering</li>
+            <li><strong>Data Engineering &amp; BI:</strong><br />ETL Pipelines · Data Cleaning · Reporting Automation · BI Dashboards</li>
+            <li><strong>Domain Expertise:</strong><br />Financial Analytics · Wealth Management · Investment Research · E-commerce Analytics</li>
+          </ul>
+        </section>
+
+        <section class="panel main-section" aria-labelledby="experience-title">
+          <h2 id="experience-title">Professional Experience</h2>
+
+          <div class="experience-list">
+            <article class="experience-item">
+              <div class="experience-head">
+                <div>
+                  <h3 class="experience-title">Sun Life Hong Kong</h3>
+                  <div class="role">Financial Planner</div>
+                </div>
+                <div class="experience-meta">May 2026 – Present<br />Hong Kong</div>
+              </div>
+              <ul>
+                <li>Advise clients on MPF portfolio allocation and fund selection, as well as savings and qualifying deferred annuity solutions, based on their financial objectives, risk tolerance, and retirement needs.</li>
+              </ul>
+            </article>
+
+            <article class="experience-item">
+              <div class="experience-head">
+                <div>
+                  <h3 class="experience-title">Freelancer</h3>
+                  <div class="role">Independent Data Scientist · Project-based</div>
+                </div>
+                <div class="experience-meta">Jul 2024 – Apr 2026<br />Hong Kong</div>
+              </div>
+              <ul>
+                <li>Delivered investment-data reconciliation and analytics projects across Excel files, offshore inputs, and third-party systems, improving reporting accuracy and consistency for Finance and Actuarial stakeholders.</li>
+              </ul>
+            </article>
+
+            <article class="experience-item">
+              <div class="experience-head">
+                <div>
+                  <h3 class="experience-title">AIA Hong Kong &amp; Macau</h3>
+                  <div class="role">Wealth Management Manager</div>
+                </div>
+                <div class="experience-meta">Sep 2023 – Jun 2024<br />Hong Kong</div>
+              </div>
+              <ul>
+                <li>Developed and managed relationships with high-net-worth clients, driving sales through tailored wealth-management proposals, ongoing client servicing, and long-term relationship management.</li>
+              </ul>
+            </article>
+
+            <article class="experience-item">
+              <div class="experience-head">
+                <div>
+                  <h3 class="experience-title">HGTECH</h3>
+                  <div class="role">Training Specialist</div>
+                </div>
+                <div class="experience-meta">Feb 2018 – May 2019<br />Wuhan</div>
+              </div>
+              <ul>
+                <li>Coordinated recruitment and employee-training activities, including candidate sourcing, interview arrangements, onboarding, training-needs analysis, programme delivery, and employee-development support.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      © <span id="year"></span> Jagger Jie Li · Built with <span class="heart">♥</span> · Hosted on GitHub
+    </footer>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const themeButton = document.getElementById("themeBtn");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeText = document.getElementById("themeText");
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function applyTheme(theme) {
+      root.setAttribute("data-theme", theme);
+      const isDark = theme === "dark";
+      themeIcon.textContent = isDark ? "☀️" : "🌙";
+      themeText.textContent = isDark ? "Light" : "Dark";
+      localStorage.setItem("theme", theme);
+    }
+
+    const savedTheme = localStorage.getItem("theme");
+    const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    applyTheme(savedTheme || preferredTheme);
+
+    themeButton.addEventListener("click", () => {
+      const currentTheme = root.getAttribute("data-theme") || "light";
+      applyTheme(currentTheme === "light" ? "dark" : "light");
+    });
+  </script>
+</body>
+</html>
